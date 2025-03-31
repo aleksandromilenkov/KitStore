@@ -12,6 +12,7 @@ namespace KitStoreAPI.Data
         public required DbSet<Kit> Kits { get; set; }
         public required DbSet<Club> Clubs { get; set; }
         public required DbSet<Cart> Carts { get; set; }
+        public required DbSet<CartItem> CartItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
