@@ -1,6 +1,7 @@
 using KitStoreAPI.Data;
 using KitStoreAPI.Entities;
 using KitStoreAPI.Middlewares;
+using KitStoreAPI.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +15,7 @@ builder.Services.AddDbContext<StoreContext>(options =>
 });
 builder.Services.AddCors();
 builder.Services.AddTransient<ExceptionMiddleware>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddIdentityApiEndpoints<User>(options =>
 {
     options.User.RequireUniqueEmail = true;
