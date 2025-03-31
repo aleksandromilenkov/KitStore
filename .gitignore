@@ -1,0 +1,42 @@
+# Build files
+bin/
+KitStoreAPI/KitStoreAPI/bin/
+obj/
+KitStoreAPI/KitStoreAPI/obj/
+
+# VS Code
+.vscode/
+RestoreClient/.vscode/
+
+# Visual Studio
+.vs/
+KitStoreAPI/KitStoreAPI/.vs/
+
+# User-specific files
+*.user
+KitStoreClient/*.user
+KitStoreAPI/KitStoreAPI/*.user
+KitStoreClient/*.suo
+KitStoreAPI/KitStoreAPI/*.suo
+
+# Logs
+logs/
+KitStoreClient/logs/
+KitStoreAPI/KitStoreAPI/logs/
+*.log
+KitStoreClient/*.log
+KitStoreAPI/KitStoreAPI/*.log
+
+# Package managers
+node_modules/
+appsettings.json
+appsettings.Development.json
+appsettings.Production.json
+
+KitStoreClient/node_modules/
+KitStoreAPI/KitStoreAPI/appsettings.json
+KitStoreAPI/KitStoreAPI/appsettings.Development.json
+KitStoreAPI/KitStoreAPI/appsettings.Production.json
+KitStoreClient/.env.production
+KitStoreAPI/KitStoreAPI/wwwroot
+KitStoreAPI/KitStoreAPI/appsettings.json
