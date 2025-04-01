@@ -105,5 +105,29 @@ namespace KitStoreAPI.Controllers
                 Roles = roles
             });
         }
+
+
+        [Authorize]
+        [HttpPost("address")]
+        public async Task<ActionResult<Address>> CreateOrUpdateAddress(Address address)
+        {
+            var user = await _userManager.Users.Include(u => u.Address)
+                .FirstOrDefaultAsync(u => u.UserName == User.Identity!.Name);
+            if (user == null) return Unauthorized();
+            user.Address = address;
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded) return BadRequest("Problem updating user address.");
+            return Ok(user.Address);
+        }
+
+        [Authorize]
+        [HttpGet("address")]
+        public async Task<ActionResult<Address>> GetSavedAddress()
+        {
+            var address = await _userManager.Users.Where(u => u.UserName == User.Identity!.Name)
+                .Select(u => u.Address).FirstOrDefaultAsync();
+            if (address == null) return NoContent();
+            return Ok(address);
+        }
     }
 }

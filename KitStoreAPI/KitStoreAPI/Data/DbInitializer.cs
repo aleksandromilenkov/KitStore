@@ -61,6 +61,7 @@ namespace KitStoreAPI.Data
                     ClubId = club.Id, // Use ClubId to associate Kit with the Club
                     Club = club, // You can either set ClubId or Club, EF will automatically handle the FK
                     SeasonYear = 2025,
+                    Price = 53.9,
                     KitType = Enums.KitType.Home,
                 },
                 new Kit(){
@@ -69,6 +70,7 @@ namespace KitStoreAPI.Data
                     ClubId = club.Id, // Use ClubId to associate Kit with the Club
                     Club = club, // You can either set ClubId or Club, EF will automatically handle the FK
                     SeasonYear = 2025,
+                    Price=49.99,
                     KitType = Enums.KitType.Away,
                 },
                  new Kit(){
@@ -77,6 +79,7 @@ namespace KitStoreAPI.Data
                     ClubId = club.Id, // Use ClubId to associate Kit with the Club
                     Club = club, // You can either set ClubId or Club, EF will automatically handle the FK
                     SeasonYear = 2025,
+                    Price=50,
                     KitType = Enums.KitType.Third,
                 },
                 };

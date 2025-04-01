@@ -1,6 +1,9 @@
 using KitStoreAPI.Data;
 using KitStoreAPI.Entities;
+using KitStoreAPI.Interfaces;
+using KitStoreAPI.MappingProfiles;
 using KitStoreAPI.Middlewares;
+using KitStoreAPI.Repositories;
 using KitStoreAPI.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -14,8 +17,10 @@ builder.Services.AddDbContext<StoreContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 builder.Services.AddCors();
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddTransient<ExceptionMiddleware>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddIdentityApiEndpoints<User>(options =>
 {
     options.User.RequireUniqueEmail = true;

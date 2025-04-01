@@ -1,6 +1,7 @@
 ﻿using KitStoreAPI.Data;
 using KitStoreAPI.Entities;
 using KitStoreAPI.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace KitStoreAPI.Repositories
 {
@@ -26,10 +27,18 @@ namespace KitStoreAPI.Repositories
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<CartItem?> GetAsync(string cartItemId)
+        public async Task<CartItem?> GetAsync(int cartItemId)
         {
-            var existingItem = await _context.CartItems.FindAsync(cartItemId);
-            return existingItem != null ? existingItem : null;
+            var existingItem = await _context.CartItems.Include(c => c.Kit).FirstOrDefaultAsync(c=> c.Id == cartItemId);
+            return existingItem;
+        }
+
+        public async Task<bool> UpdateCartItem(CartItem cartItem)
+        {
+            var existingItem = await _context.CartItems.FindAsync(cartItem.Id);
+            if (existingItem == null) return false;
+            _context.CartItems.Update(existingItem);
+            return await _context.SaveChangesAsync() > 0;
         }
     }
 }

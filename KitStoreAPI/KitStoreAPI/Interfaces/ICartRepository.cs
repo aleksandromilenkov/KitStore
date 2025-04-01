@@ -6,7 +6,7 @@ namespace KitStoreAPI.Interfaces
     {
         Task<Cart?> GetAsync(string userId);
         Task<bool> CreateCart(string userId);
-        Task<bool> DeleteCart(Cart cart);
+        Task<bool> DeleteCart(string userId);
         
     }
 }
