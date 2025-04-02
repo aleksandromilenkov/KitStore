@@ -24,27 +24,40 @@ namespace KitStoreAPI.Repositories
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<List<Kit>> GetAllKits(KitsQueryObject kitsQueryObject)
+        public async Task<PagedResult<Kit>> GetAllKits(KitsQueryObject kitsQueryObject)
         {
-            var kits = _context.Kits.Include(k => k.Club).AsQueryable();
-            if(!string.IsNullOrEmpty(kitsQueryObject.SearchTerm)) { 
-                kits = kits.Where(k => k.Club.Name.Contains(kitsQueryObject.SearchTerm));
+            var kitsQuery = _context.Kits.Include(k => k.Club).AsQueryable();
+            if(!string.IsNullOrEmpty(kitsQueryObject.SearchTerm)) {
+                kitsQuery = kitsQuery.Where(k => k.Club.Name.Contains(kitsQueryObject.SearchTerm));
             }
             if (kitsQueryObject.SeasonYear != null)
             {
-                kits = kits.Where(k => k.SeasonYear == kitsQueryObject.SeasonYear);
+                kitsQuery = kitsQuery.Where(k => k.SeasonYear == kitsQueryObject.SeasonYear);
             }
             if (kitsQueryObject.KitType != null)
             {
-                kits = kits.Where(k => k.KitType == kitsQueryObject.KitType);
+                kitsQuery = kitsQuery.Where(k => k.KitType == kitsQueryObject.KitType);
             }
             if (!string.IsNullOrWhiteSpace(kitsQueryObject.OrderBy))
             {
-                if (kitsQueryObject.OrderBy.Equals("Price", StringComparison.OrdinalIgnoreCase))
-                { }
+                if (kitsQueryObject.OrderBy.Equals("Price", StringComparison.OrdinalIgnoreCase)){
+                    kitsQuery = kitsQueryObject.IsDescending ? kitsQuery.OrderByDescending(k => k.Price) : kitsQuery.OrderBy(k => k.Price);
+                }
+                if (kitsQueryObject.OrderBy.Equals("SeasonYear", StringComparison.OrdinalIgnoreCase))
+                {
+                    kitsQuery = kitsQueryObject.IsDescending ? kitsQuery.OrderByDescending(k => k.SeasonYear) : kitsQuery.OrderBy(k => k.SeasonYear);
+                }
+                if (kitsQueryObject.OrderBy.Equals("Club", StringComparison.OrdinalIgnoreCase))
+                {
+                    kitsQuery = kitsQueryObject.IsDescending ? kitsQuery.OrderByDescending(k => k.Club.Name) : kitsQuery.OrderBy(k => k.Club.Name);
+                }
             }
+            int totalItems = await kitsQuery.CountAsync();
             var skipNumber = (kitsQueryObject.PageNumber - 1) * kitsQueryObject.PageSize;
-            return await kits.Skip(skipNumber).Take(kitsQueryObject.PageSize).ToListAsync();
+            var kits = await kitsQuery.Skip(skipNumber).Take(kitsQueryObject.PageSize).ToListAsync();
+            var paginationMetadata = new PaginationMetadata(totalItems, kitsQueryObject.PageNumber, kitsQueryObject.PageSize);
+
+            return new PagedResult<Kit>(kits, paginationMetadata);
         }
 
         public async Task<Kit?> GetAsync(int kitId)

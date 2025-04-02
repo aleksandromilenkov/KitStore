@@ -20,7 +20,11 @@ builder.Services.AddCors();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddTransient<ExceptionMiddleware>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<ImageService>();
 builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<IClubRepository, ClubRepository>();
+builder.Services.AddScoped<IKitRepository, KitRepository>();
+builder.Services.AddScoped<ICartItemRepository, CartItemRepository>();
 builder.Services.AddIdentityApiEndpoints<User>(options =>
 {
     options.User.RequireUniqueEmail = true;
