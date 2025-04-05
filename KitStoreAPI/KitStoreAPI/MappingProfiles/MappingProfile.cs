@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using KitStoreAPI.DTOs;
 using KitStoreAPI.Entities;
+using KitStoreAPI.Entities.OrderEntityAggregate;
 
 namespace KitStoreAPI.MappingProfiles
 {
@@ -17,6 +18,11 @@ namespace KitStoreAPI.MappingProfiles
             .ForMember(dest => dest.Id, opt => opt.Ignore()); // Prevents overwriting ID
             CreateMap<UpdateClubDTO, Club>().ReverseMap()
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
+            CreateMap<Order, OrderDTO>()
+           .ForMember(dest => dest.Total, opt =>
+               opt.MapFrom(src => src.Subtotal + src.DeliveryFee - src.Discount));
+
+            CreateMap<OrderItem, OrderItemDTO>();
         }
     }
 }

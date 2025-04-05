@@ -12,7 +12,7 @@ namespace KitStoreAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountController(UserManager<User> _userManager, SignInManager<User> _signinManager, RoleManager<User> _roleManager, ITokenService _tokenService) : ControllerBase
+    public class AccountController(UserManager<User> _userManager, SignInManager<User> _signinManager, RoleManager<User> _roleManager, ITokenService _tokenService, ImageService _imageService) : ControllerBase
     {
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterUserDTO registerDTO)
@@ -129,5 +129,80 @@ namespace KitStoreAPI.Controllers
             if (address == null) return NoContent();
             return Ok(address);
         }
+
+        [Authorize]
+        [HttpPut("update-email")]
+        public async Task<ActionResult> UpdateEmail([FromBody] UpdateEmailDTO updateEmailDto)
+        {
+            var userName = User.Identity?.Name;
+            if (string.IsNullOrEmpty(userName)) return Unauthorized();
+
+            var user = await _signinManager.UserManager.FindByNameAsync(userName);
+            if (user == null) return Unauthorized();
+
+
+            var emailExists = await _signinManager.UserManager.FindByEmailAsync(updateEmailDto.NewEmail);
+            if (emailExists != null) return BadRequest("Email is already in use.");
+
+            var emailResult = await _signinManager.UserManager.SetEmailAsync(user, updateEmailDto.NewEmail);
+            if (!emailResult.Succeeded) return BadRequest(emailResult.Errors.Select(e => e.Description));
+
+            var usernameResult = await _signinManager.UserManager.SetUserNameAsync(user, updateEmailDto.NewEmail);
+
+            if (!usernameResult.Succeeded) return BadRequest(usernameResult.Errors.Select(e => e.Description));
+
+            await _signinManager.SignInAsync(user, isPersistent: false); // refresh authentication to update claims
+
+            return Ok(new { message = "Email updated successfully." });
+
+        }
+
+        [Authorize]
+        [HttpPut("update-password")]
+        public async Task<ActionResult> UpdatePassword([FromBody] UpdatePasswordDTO updatePasswordDto)
+        {
+            var user = await _signinManager.UserManager.FindByNameAsync(User.Identity!.Name);
+            if (user == null) return Unauthorized();
+
+            var result = await _signinManager.UserManager.ChangePasswordAsync(user, updatePasswordDto.CurrentPassword, updatePasswordDto.NewPassword);
+
+            if (!result.Succeeded)
+            {
+                return BadRequest(result.Errors.Select(e => e.Description));
+            }
+
+            return Ok(new { message = "Password updated successfully." });
+
+        }
+
+        [Authorize]
+        [HttpPut("update-image")]
+        public async Task<ActionResult> UpdateImage([FromForm] UpdateImageDTO updateImageDTO)
+        {
+            var user = await _signinManager.UserManager.FindByNameAsync(User.Identity!.Name);
+            if (user == null) return Unauthorized();
+
+            if (updateImageDTO.File != null)
+            {
+                var imageResult = await _imageService.AddImageAsync(updateImageDTO.File);
+                if (imageResult.Error != null)
+                {
+                    return BadRequest($"Error {imageResult.Error.Message}");
+                }
+                if (!string.IsNullOrEmpty(user.PublicId))
+                {
+                    await _imageService.DeleteImageAsync(user.PublicId);
+                }
+                user.PictureUrl = imageResult.SecureUrl.AbsoluteUri;
+                user.PublicId = imageResult.PublicId;
+                var updateResult = await _signinManager.UserManager.UpdateAsync(user);
+                if (!updateResult.Succeeded)
+                {
+                    return BadRequest(updateResult.Errors.Select(e => e.Description));
+                }
+            }
+            return NoContent();
+        }
+
     }
 }

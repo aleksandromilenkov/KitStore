@@ -1,6 +1,7 @@
 ﻿using System.Reflection.Emit;
 using CloudinaryDotNet.Actions;
 using KitStoreAPI.Entities;
+using KitStoreAPI.Entities.OrderEntityAggregate;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,8 @@ namespace KitStoreAPI.Data
         public required DbSet<Club> Clubs { get; set; }
         public required DbSet<Cart> Carts { get; set; }
         public required DbSet<CartItem> CartItems { get; set; }
+        public required DbSet<Order> Orders { get; set; }
+        public required DbSet<OrderItem> OrderItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

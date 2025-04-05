@@ -1,13 +1,17 @@
 ﻿using KitStoreAPI.DTOs;
 using KitStoreAPI.Entities;
+using KitStoreAPI.Entities.OrderEntityAggregate;
 
 namespace KitStoreAPI.Interfaces
 {
     public interface IOrderRepository
     {
-        Task<List<OrderDTO>> GetOrders();
-        Task<OrderDTO> GetOrderById(int id);
-        Task<bool> CreateOrder(CreateOrderDTO orderDTO, Cart cart);
+        Task<List<Order>> GetOrders(string email);
+        Task<Order?> GetOrderByPaymentIntentId(Cart cart);
+        Task<Order?> GetOrderByIdAndEmail(int id, string email);
+        Task<bool> CreateOrder(Order order);
+        Task<bool> SaveChanges();
+
 
     }
 }
