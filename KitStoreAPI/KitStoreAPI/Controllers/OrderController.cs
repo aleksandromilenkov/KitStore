@@ -20,7 +20,7 @@ namespace KitStoreAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<List<OrderDTO>>> GetOrders()
         {
-            var orders = await _orderRepository.GetOrders(User.GetUserName());
+            var orders = await _orderRepository.GetOrders(User.GetUserEmail());
             var ordersDTos = _mapper.Map<List<OrderDTO>>(orders);
             return ordersDTos;
         }
@@ -47,7 +47,7 @@ namespace KitStoreAPI.Controllers
             {
                 order = new Order()
                 {
-                    BuyerEmail = User.GetUserName(),
+                    BuyerEmail = User.GetUserEmail(),
                     OrderItems = items,
                     ShippingAddress = createOrderDto.ShippingAddress,
                     PaymentSummary = createOrderDto.PaymentSummary,
@@ -77,7 +77,7 @@ namespace KitStoreAPI.Controllers
         [HttpGet("id:int")]
         public async Task<ActionResult<OrderDTO>> GetOrderDetails(int id)
         {
-            var order = await _orderRepository.GetOrderByIdAndEmail(id ,User.GetUserName());
+            var order = await _orderRepository.GetOrderByIdAndEmail(id ,User.GetUserEmail());
             if (order == null) return NotFound();
             var orderDto = _mapper.Map<OrderDTO>(order);
             return orderDto;

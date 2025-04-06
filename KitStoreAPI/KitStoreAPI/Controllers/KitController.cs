@@ -22,7 +22,7 @@ namespace KitStoreAPI.Controllers
             return result;
         }
 
-        [HttpGet("id")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<Kit>> GetKit([FromRoute] int id)
         {
             var kit = await _kitRepository.GetAsync(id);

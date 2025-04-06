@@ -8,5 +8,14 @@ namespace KitStoreAPI.Extentions
         {
             return user.Identity?.Name ?? throw new UnauthorizedAccessException();
         }
+        public static string GetUserEmail(this ClaimsPrincipal user)
+        {
+            var emailClaim = user.FindFirst(ClaimTypes.Email);
+            if (emailClaim != null)
+            {
+                return emailClaim.Value;
+            }
+            throw new UnauthorizedAccessException("User email claim is not available.");
+        }
     }
 }

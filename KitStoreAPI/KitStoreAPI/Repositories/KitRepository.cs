@@ -62,7 +62,7 @@ namespace KitStoreAPI.Repositories
 
         public async Task<Kit?> GetAsync(int kitId)
         {
-           return await _context.Kits.FirstOrDefaultAsync(k => k.Id == kitId);
+           return await _context.Kits.Include(k=> k.Club).FirstOrDefaultAsync(k => k.Id == kitId);
         }
 
         public async Task<Kit?> GetAsyncAsNoTracking(int kitId)

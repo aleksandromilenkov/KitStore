@@ -26,8 +26,8 @@ namespace KitStoreAPI.Services
             var roleClaims = userRoles.Select(role => new Claim(ClaimTypes.Role, role)).ToList();
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Email, appUser.Email),
-                new Claim(JwtRegisteredClaimNames.Name, appUser.UserName),
+                new Claim(JwtRegisteredClaimNames.Email, appUser.Email ?? ""),
+                new Claim(JwtRegisteredClaimNames.Name, appUser.UserName ?? ""),
                 new Claim(ClaimTypes.NameIdentifier, appUser.Id)
             }.Union(roleClaims);
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);

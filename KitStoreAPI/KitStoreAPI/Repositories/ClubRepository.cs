@@ -33,12 +33,12 @@ namespace KitStoreAPI.Repositories
 
         public async Task<List<Club>> GetAllClubs()
         {
-            return await _context.Clubs.ToListAsync();
+            return await _context.Clubs.Include(c => c.Kits).ToListAsync();
         }
 
         public async Task<Club?> GetAsync(int clubId)
         {
-            return await _context.Clubs.FindAsync(clubId);
+            return await _context.Clubs.Include(c => c.Kits).FirstOrDefaultAsync(c => c.Id == clubId);
         }
     }
 }

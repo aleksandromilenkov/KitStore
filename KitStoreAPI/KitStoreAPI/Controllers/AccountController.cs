@@ -12,7 +12,7 @@ namespace KitStoreAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountController(UserManager<User> _userManager, SignInManager<User> _signinManager, RoleManager<User> _roleManager, ITokenService _tokenService, ImageService _imageService) : ControllerBase
+    public class AccountController(UserManager<User> _userManager, SignInManager<User> _signinManager, RoleManager<IdentityRole> _roleManager, ITokenService _tokenService, ImageService _imageService) : ControllerBase
     {
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterUserDTO registerDTO)
@@ -32,7 +32,7 @@ namespace KitStoreAPI.Controllers
                 Email = registerDTO.Email,
             };
             var createdUser = await _userManager.CreateAsync(appUser, registerDTO.Password);
-            var roleResult = await _userManager.AddToRoleAsync(appUser, "User");
+            var roleResult = await _userManager.AddToRoleAsync(appUser, "Member");
             return roleResult.Succeeded ? Ok() : BadRequest();
         }
 

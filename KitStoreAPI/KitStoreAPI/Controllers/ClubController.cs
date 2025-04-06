@@ -22,7 +22,7 @@ namespace KitStoreAPI.Controllers
             return result;
         }
 
-        [HttpGet("id")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<Club>> GetClub([FromRoute] int id)
         {
             var club = await _clubRepository.GetAsync(id);
@@ -49,8 +49,8 @@ namespace KitStoreAPI.Controllers
             {
                 return BadRequest("Cannot create club");
             }
-            var kitToReturn = _mapper.Map<KitDTO>(club);
-            return CreatedAtAction(nameof(GetClub), new { id = club.Id }, kitToReturn);
+            var clubToReturn = _mapper.Map<ClubDTO>(club);
+            return CreatedAtAction(nameof(GetClub), new { id = club.Id }, clubToReturn);
         }
 
         [Authorize(Roles = "Admin")]
