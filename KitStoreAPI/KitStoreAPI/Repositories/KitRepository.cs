@@ -73,7 +73,7 @@ namespace KitStoreAPI.Repositories
         public async Task<bool> UpdateKit(Kit kit)
         {
             var existingKit = await _context.Kits.FindAsync(kit.Id);
-            if (existingKit != null) return false;
+            if (existingKit == null) return false;
             _context.Kits.Update(kit);
             return await _context.SaveChangesAsync() > 0;
         }

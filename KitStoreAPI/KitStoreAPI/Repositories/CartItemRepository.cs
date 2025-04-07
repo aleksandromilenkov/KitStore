@@ -29,7 +29,7 @@ namespace KitStoreAPI.Repositories
 
         public async Task<CartItem?> GetAsync(int cartItemId)
         {
-            var existingItem = await _context.CartItems.Include(c => c.Kit).FirstOrDefaultAsync(c=> c.Id == cartItemId);
+            var existingItem = await _context.CartItems.Include(c => c.Kit).ThenInclude(k => k.Club).FirstOrDefaultAsync(c=> c.Id == cartItemId);
             return existingItem;
         }
 

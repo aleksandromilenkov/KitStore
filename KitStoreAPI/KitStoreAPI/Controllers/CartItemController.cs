@@ -13,7 +13,7 @@ namespace KitStoreAPI.Controllers
     public class CartItemController(ICartItemRepository _cartItemRepository, IKitRepository _kitRepository, IMapper _mapper) : ControllerBase
     {
 
-        [HttpGet("id")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<CartItemDTO>> GetCartItem([FromRoute] int id)
         {
             var cartItem = await _cartItemRepository.GetAsync(id);
@@ -55,7 +55,7 @@ namespace KitStoreAPI.Controllers
         }
 
 
-        [HttpDelete("itemId")]
+        [HttpDelete("{itemId}")]
         public async Task<IActionResult> RemoveItemFromCart([FromRoute] int itemId)
         {
             if (itemId <= 0) return BadRequest();
