@@ -21,10 +21,10 @@ namespace KitStoreAPI.Repositories
             return order;
         }
 
-        public async Task<Order?> GetOrderByPaymentIntentId(Cart cart)
+        public async Task<Order?> GetOrderByPaymentIntentId(string orderId)
         {
             var order = await _context.Orders.Include(o => o.OrderItems)
-                .FirstOrDefaultAsync(o => o.PaymentIntentId == cart.PaymentIntentId);
+                .FirstOrDefaultAsync(o => o.PaymentIntentId == orderId);
             return order;
         }
 
@@ -39,6 +39,12 @@ namespace KitStoreAPI.Repositories
         public async Task<bool> SaveChanges()
         {
             return await _context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<bool> UpdateOrder(Order order)
+        {
+            _context.Orders.Update(order);
+            return await SaveChanges();
         }
     }
 }
