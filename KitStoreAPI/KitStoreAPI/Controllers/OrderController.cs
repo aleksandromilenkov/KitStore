@@ -42,7 +42,7 @@ namespace KitStoreAPI.Controllers
                 ? subtotal - discountService.CalculateDiscountFromAmount(cart.AppCoupon, subtotal)
                 : 0;
             var deliveryFee = CalculateDeliveryFee(subtotal);
-            var order = await _orderRepository.GetOrderByPaymentIntentId(cart);
+            var order = await _orderRepository.GetOrderByPaymentIntentId(cart.PaymentIntentId);
             if (order == null)
             {
                 order = new Order()
