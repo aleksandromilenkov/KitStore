@@ -43,10 +43,10 @@ namespace KitStoreAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == loginDTO.UserName);
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == loginDTO.Email);
             if (user == null)
             {
-                return Unauthorized("Invalid username!");
+                return Unauthorized("Invalid email!");
             }
             var result = await _signinManager.CheckPasswordSignInAsync(user, loginDTO.Password, false);
             if (!result.Succeeded)
@@ -102,7 +102,8 @@ namespace KitStoreAPI.Controllers
             {
                 user.Email,
                 user.UserName,
-                Roles = roles
+                user?.PictureUrl,
+                Roles = roles,
             });
         }
 
