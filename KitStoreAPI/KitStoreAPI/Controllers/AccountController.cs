@@ -1,4 +1,5 @@
-﻿using KitStoreAPI.DTOs;
+﻿using System.Security.Claims;
+using KitStoreAPI.DTOs;
 using KitStoreAPI.Entities;
 using KitStoreAPI.Interfaces;
 using KitStoreAPI.Services;
@@ -53,11 +54,14 @@ namespace KitStoreAPI.Controllers
             {
                 return Unauthorized("Invalid username or password");
             }
+            var roles = await _userManager.GetRolesAsync(user);
             var userToReturn = new UserReturnDTO
             {
                 UserName = user.UserName == null ? "" : user.UserName,
                 Email = user.Email == null ? "" : user.Email,
                 Token = await _tokenService.CreateToken(user),
+                Roles = roles,
+                PictureUrl = user.PictureUrl,
             };
             return Ok(userToReturn);
         }
@@ -180,7 +184,14 @@ namespace KitStoreAPI.Controllers
         [HttpPut("update-image")]
         public async Task<ActionResult> UpdateImage([FromForm] UpdateImageDTO updateImageDTO)
         {
-            var user = await _signinManager.UserManager.FindByNameAsync(User.Identity!.Name);
+            foreach (var claim in User.Claims)
+            {
+                Console.WriteLine($"{claim.Type} : {claim.Value}");
+            }
+
+            var userName = User.FindFirst("name")?.Value;
+
+            var user = await _signinManager.UserManager.FindByNameAsync(userName);
             if (user == null) return Unauthorized();
 
             if (updateImageDTO.File != null)

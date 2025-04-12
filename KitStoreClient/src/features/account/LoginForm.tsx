@@ -6,13 +6,13 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { setUser } from "./userSlice";
-import { useLazyUserInfoQuery, useLoginMutation } from "./accountApi";
+import { useLoginMutation } from "./accountApi";
 
 const LoginForm = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [fetchUserInfo] = useLazyUserInfoQuery(); // does not fetch the data automatically like useUserInfoQuery unless you call the method
+    //const [fetchUserInfo] = useLazyUserInfoQuery(); // does not fetch the data automatically like useUserInfoQuery unless you call the method
     const [login, {isLoading}] = useLoginMutation();
     const {register, handleSubmit, formState: {errors}} = useForm<LoginSchema>({
         mode: "onTouched", // validation will kick in if we just touch one field
@@ -20,8 +20,7 @@ const LoginForm = () => {
     });
     const onSubmit = async (data: LoginSchema) => {
          try{
-            await login(data).unwrap();
-            const user = await fetchUserInfo().unwrap();
+            const user =  await login(data).unwrap();
             dispatch(setUser(user));
             navigate(location.state?.from || "/");
          }catch(err){

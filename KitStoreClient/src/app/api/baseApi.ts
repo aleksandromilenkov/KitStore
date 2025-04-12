@@ -47,6 +47,9 @@ import {
         case 401:
           if(typeof responseData === 'object' && 'title' in responseData) // for typescript complainning
           toast.error(responseData.title);
+          if(typeof responseData === 'string') {
+            toast.error(responseData);
+          }
           break;
         case 403:
           if(typeof responseData === 'object')

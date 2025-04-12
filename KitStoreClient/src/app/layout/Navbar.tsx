@@ -7,6 +7,7 @@ import { AppBar, Toolbar, Box, Typography, IconButton, List, ListItem, Badge, Li
 import { NavLink } from "react-router-dom"
 import { toggleDarkMode } from "./uiSlice"
 import { useAppDispatch, useAppSelector } from "../store/store";
+import UserMenu from "./UserMenu";
 const midLinks = [
     {
       title: "Catalog",
@@ -47,6 +48,7 @@ const midLinks = [
 const Navbar = () => {
     const {isLoading, darkMode} = useAppSelector(state=> state.ui);
     const dispatch = useAppDispatch();
+    const user = useAppSelector(state => state.user?.user);
   return (
     <AppBar
         position="fixed"
@@ -81,7 +83,7 @@ const Navbar = () => {
             </Badge>
           </IconButton>
           
-          {/* { user 
+          { (user && user.token) 
             ? (
               <Box display="flex">
                 <Box display="flex" alignContent="center" justifyContent="center">
@@ -97,14 +99,7 @@ const Navbar = () => {
               </ListItem>
             ))}
           </List>)
-          } */}
-          <List sx={{ display: "flex" }}>
-            {rightLinks.map(({ title, path }, idx) => (
-              <ListItem component={NavLink} to={path} key={idx} sx={(theme) => navStyles(theme)}>
-              {title.toUpperCase()}
-            </ListItem>
-            ))}
-          </List>
+          }
         </Box>
       </Toolbar>
       {isLoading && (

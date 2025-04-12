@@ -1,7 +1,7 @@
 export type User = {
     email: string;
     userName: string;
-    roles: string[];
+    roles: {id:number, values: string[]};
     pictureUrl?: string;
     token: string;
   };

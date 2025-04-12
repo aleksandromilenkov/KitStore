@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Text.Json.Serialization;
 using API.Services;
 using KitStoreAPI.Data;
@@ -69,7 +70,8 @@ builder.Services.AddAuthentication(options => {
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(
             System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"])
-        )
+        ),
+        NameClaimType = ClaimTypes.Name,
     };
 });
 builder.Services.AddScoped<RoleManager<IdentityRole>>();

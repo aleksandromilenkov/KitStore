@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { User } from '../../app/models/User';
+import { User } from '../../app/models/user';
+
 
 
 
@@ -15,7 +16,7 @@ const userSlice = createSlice({
   name: 'account',
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<User>) => {
+    setUser: (state, action: PayloadAction<User | null>) => {
       state.user = action.payload;
     },
     logout: (state) => {
