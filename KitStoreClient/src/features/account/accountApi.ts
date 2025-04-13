@@ -61,8 +61,8 @@ export const accountApi = createApi({
                 }
             }
         }),
-        updateEmail: builder.mutation<void,{ newEmail: string }>({
-            query: (data)=> ({url:"account/update-email", method:"PUT",body: data }),
+        updateUsername: builder.mutation<void,{ newUsername: string }>({
+            query: (data)=> ({url:"account/update-username", method:"PUT",body: data }),
             onQueryStarted: async(_, {dispatch, queryFulfilled})=>{
                 try{
                     await queryFulfilled;
@@ -97,4 +97,4 @@ export const accountApi = createApi({
     })
 });
 
-export const {useLoginMutation, useRegisterMutation, useUserInfoQuery, useLazyUserInfoQuery, useFetchAddressQuery, useUpdateUserAddressMutation, useUpdateEmailMutation, useUpdatePasswordMutation, useUpdateImageMutation} = accountApi;
+export const {useLoginMutation, useRegisterMutation, useUserInfoQuery, useLazyUserInfoQuery, useFetchAddressQuery, useUpdateUserAddressMutation, useUpdateUsernameMutation, useUpdatePasswordMutation, useUpdateImageMutation} = accountApi;

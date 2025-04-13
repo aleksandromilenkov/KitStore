@@ -31,7 +31,7 @@ const UserMenu = ({user}:Props) => {
           size="large"
           sx={{fontSize: "1.1rem"}}
         >
-          {user.email}
+          {user.userName}
         </Button>
         <Menu
           id="fade-menu"

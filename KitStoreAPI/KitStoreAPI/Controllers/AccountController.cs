@@ -136,37 +136,36 @@ namespace KitStoreAPI.Controllers
         }
 
         [Authorize]
-        [HttpPut("update-email")]
-        public async Task<ActionResult> UpdateEmail([FromBody] UpdateEmailDTO updateEmailDto)
+        [HttpPut("update-username")]
+        public async Task<ActionResult> UpdateUsername([FromBody] UpdateUsernameDTO updateUsernameDTO)
         {
-            var userName = User.Identity?.Name;
-            if (string.IsNullOrEmpty(userName)) return Unauthorized();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
-            var user = await _signinManager.UserManager.FindByNameAsync(userName);
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null) return Unauthorized();
 
+            var usernameExists = await _signinManager.UserManager.FindByNameAsync(updateUsernameDTO.NewUsername);
+            if (usernameExists != null) return BadRequest("Username is already taken.");
 
-            var emailExists = await _signinManager.UserManager.FindByEmailAsync(updateEmailDto.NewEmail);
-            if (emailExists != null) return BadRequest("Email is already in use.");
+            var usernameResult = await _signinManager.UserManager.SetUserNameAsync(user, updateUsernameDTO.NewUsername);
+            if (!usernameResult.Succeeded)
+                return BadRequest(usernameResult.Errors.Select(e => e.Description));
 
-            var emailResult = await _signinManager.UserManager.SetEmailAsync(user, updateEmailDto.NewEmail);
-            if (!emailResult.Succeeded) return BadRequest(emailResult.Errors.Select(e => e.Description));
+            await _signinManager.SignInAsync(user, isPersistent: false); // refresh claims
 
-            var usernameResult = await _signinManager.UserManager.SetUserNameAsync(user, updateEmailDto.NewEmail);
-
-            if (!usernameResult.Succeeded) return BadRequest(usernameResult.Errors.Select(e => e.Description));
-
-            await _signinManager.SignInAsync(user, isPersistent: false); // refresh authentication to update claims
-
-            return Ok(new { message = "Email updated successfully." });
-
+            return Ok(new { message = "Username updated successfully." });
         }
+
 
         [Authorize]
         [HttpPut("update-password")]
         public async Task<ActionResult> UpdatePassword([FromBody] UpdatePasswordDTO updatePasswordDto)
         {
-            var user = await _signinManager.UserManager.FindByNameAsync(User.Identity!.Name);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null) return Unauthorized();
 
             var result = await _signinManager.UserManager.ChangePasswordAsync(user, updatePasswordDto.CurrentPassword, updatePasswordDto.NewPassword);
@@ -184,14 +183,10 @@ namespace KitStoreAPI.Controllers
         [HttpPut("update-image")]
         public async Task<ActionResult> UpdateImage([FromForm] UpdateImageDTO updateImageDTO)
         {
-            foreach (var claim in User.Claims)
-            {
-                Console.WriteLine($"{claim.Type} : {claim.Value}");
-            }
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
-            var userName = User.FindFirst("name")?.Value;
-
-            var user = await _signinManager.UserManager.FindByNameAsync(userName);
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null) return Unauthorized();
 
             if (updateImageDTO.File != null)
