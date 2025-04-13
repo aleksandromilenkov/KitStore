@@ -29,7 +29,7 @@ namespace KitStoreAPI.Controllers
             }
             var appUser = new User
             {
-                UserName = registerDTO.UserName,
+                UserName = registerDTO.Email,
                 Email = registerDTO.Email,
             };
             var createdUser = await _userManager.CreateAsync(appUser, registerDTO.Password);
