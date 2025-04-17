@@ -1,4 +1,5 @@
-﻿using KitStoreAPI.Data;
+﻿using System.Linq;
+using KitStoreAPI.Data;
 using KitStoreAPI.Entities;
 using KitStoreAPI.Interfaces;
 using KitStoreAPI.RequestHelpers;
@@ -37,6 +38,11 @@ namespace KitStoreAPI.Repositories
             if (kitsQueryObject.KitType != null)
             {
                 kitsQuery = kitsQuery.Where(k => k.KitType == kitsQueryObject.KitType);
+            }
+            if (!string.IsNullOrEmpty(kitsQueryObject.Leagues))
+            {
+                var leagueList = kitsQueryObject.Leagues.ToLower().Split(",").ToList(); // or we can use HashSet instead of list like this new HashSet<string>(brands.ToLower().Split(",")); since HashSets.Contains has speed O(1) and List.Contains O(n)
+                kitsQuery = kitsQuery.Where(k => leagueList.Contains(k.Club.League.ToString().ToLower()));
             }
             if (!string.IsNullOrWhiteSpace(kitsQueryObject.OrderBy))
             {

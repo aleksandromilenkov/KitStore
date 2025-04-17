@@ -11,5 +11,6 @@ namespace KitStoreAPI.RequestHelpers
         public string? SearchTerm { get; set; }
         public int? SeasonYear { get; set; }
         public KitType? KitType { get; set; }
+        public string? Leagues { get; set; }
     }
 }
