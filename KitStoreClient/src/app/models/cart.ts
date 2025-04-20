@@ -1,6 +1,8 @@
 import { CartItem } from "./cartItem"
 import { User } from "./user";
-
+export type RawCart = Omit<Cart, 'items'> & {
+    items: CartItem[] | { $values: CartItem[] };
+  };
 export type Cart = {
     id: number,
     createdDate: Date;

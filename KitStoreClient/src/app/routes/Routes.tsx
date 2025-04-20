@@ -9,6 +9,7 @@ import Catalog from "../../features/catalog/Catalog";
 import AboutPage from "../../features/about/AboutPage";
 import CartPage from "../../features/cart/CartPage";
 import ProfilePage from "../../features/account/ProfilePage";
+import ProductDetails from "../../features/catalog/ProductDetails";
 
 
 
@@ -22,6 +23,7 @@ export const router = createBrowserRouter([
             {path: "register", element: <RegisterForm />},
             {path: "profile", element: <ProfilePage />},
             {path: "catalog", element: <Catalog />},
+            {path: "catalog/:id",element: <ProductDetails />},
             {path: "cart", element: <CartPage />},
             {path: "about", element: <AboutPage />},
             {path: "server-error", element: <ServerError />},

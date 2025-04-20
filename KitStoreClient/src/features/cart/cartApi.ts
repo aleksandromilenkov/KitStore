@@ -1,10 +1,9 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithErrorHandling } from "../../app/api/baseApi";
-// import { CartItem } from "../../app/models/cartItem";
-// import { Kit } from "../../app/models/kit";
-import { Cart } from "../../app/models/cart";
+import { Cart, RawCart } from "../../app/models/cart";
 import { CreateCartItem } from "../../app/models/createCartItem";
 import { DeleteCartItem } from "../../app/models/deleteCartItem";
+import { CartItem } from "../../app/models/cartItem";
 
 // const isCartItem = (product: Kit | CartItem): product is CartItem => {
 //   return (product as CartItem).quantity !== undefined;
@@ -17,6 +16,17 @@ export const cartApi = createApi({
   endpoints: (builder) => ({
     fetchCart: builder.query<Cart, void>({
       query: () => ({ url: "cart" }),
+      transformResponse: (response: RawCart): Cart => {
+        const rawItems = response.items as CartItem[] | { $values: CartItem[] };
+        const items = Array.isArray(rawItems)
+          ? rawItems
+          : rawItems?.$values ?? [];
+    
+        return {
+          ...response,
+          items, // now definitely CartItem[]
+        };
+      },
       providesTags: ["Cart"],
     }),
     addItemToCart: builder.mutation<Cart, CreateCartItem>({
@@ -45,7 +55,6 @@ export const cartApi = createApi({
         { cartItemId, quantity },
         { dispatch, queryFulfilled }
       ) => {
-        // manually updating the cached data from fetchCart query
         const patchResult = dispatch(
           cartApi.util.updateQueryData("fetchCart", undefined, (draftData) => {
             const itemIndex = draftData.items.findIndex(
@@ -63,10 +72,9 @@ export const cartApi = createApi({
           await queryFulfilled;
         } catch (error) {
           console.log(error);
-          // if removeItemFromCart mutation fails then the manually updated data is reverted
           patchResult.undo();
         }
-      },
+      }
     }),
     clearCart: builder.mutation<void, void>({
         query: () => ({
