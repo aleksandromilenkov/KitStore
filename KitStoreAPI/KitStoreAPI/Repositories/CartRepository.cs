@@ -1,12 +1,23 @@
-﻿using KitStoreAPI.Data;
+﻿using API.Services;
+using KitStoreAPI.Data;
 using KitStoreAPI.Entities;
 using KitStoreAPI.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using RestoreAPI.Services;
 
 namespace KitStoreAPI.Repositories
 {
-    public class CartRepository(StoreContext _context) : ICartRepository
+    public class CartRepository(StoreContext _context, DiscountService discountService, PaymentsService paymentsService) : ICartRepository
     {
+        public async Task<Cart?> AddCoupon(string code, Cart cart)
+        {
+            var coupon = await discountService.GetCouponFromPromoCode(code);
+            cart.AppCoupon = coupon;
+            await paymentsService.CreateOrUpdatePaymentIntent(cart);
+            var changes = await _context.SaveChangesAsync() > 0;
+            return changes ? cart : null;
+        }
+
         public async Task<bool> CreateCart(string userId)
         {
             var existingCart = await _context.Carts.FirstOrDefaultAsync(c=> c.UserId == userId);
@@ -44,6 +55,14 @@ namespace KitStoreAPI.Repositories
         {
             var cart = await _context.Carts.FirstOrDefaultAsync(c => c.PaymentIntentId == intentId);
             return cart;
+        }
+
+        public async Task<bool> RemoveCoupon(Cart cart)
+        {
+            await paymentsService.CreateOrUpdatePaymentIntent(cart);
+            cart.AppCoupon = null;
+            var changes = await _context.SaveChangesAsync() > 0;
+            return changes;
         }
 
         public async Task<bool> UpdateCart(Cart cart)

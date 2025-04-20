@@ -10,6 +10,8 @@ namespace KitStoreAPI.Interfaces
         Task<bool> UpdateCart(Cart cart);
         Task<bool> DeleteCartByCart(Cart cart);
         Task<bool> DeleteCart(string userId);
+        Task<Cart?> AddCoupon(string code, Cart cart);
+        Task<bool> RemoveCoupon(Cart cart);
         
     }
 }

@@ -55,13 +55,14 @@ namespace KitStoreAPI.Controllers
         }
 
 
-        [HttpDelete("{itemId}")]
-        public async Task<IActionResult> RemoveItemFromCart([FromRoute] int itemId)
+        [HttpDelete]
+        public async Task<IActionResult> RemoveItemFromCart([FromQuery] int itemId, int quantity)
         {
+            if (quantity <= 0) throw new ArgumentException("Quantity should be greater than 0", nameof(quantity));
             if (itemId <= 0) return BadRequest();
             var itemToRemove = await _cartItemRepository.GetAsync(itemId);
             if (itemToRemove == null) return BadRequest("Item is already removed");
-            if (!await _cartItemRepository.DeleteCartItem(itemToRemove)) return BadRequest("Cannot remove this item");
+            if (!await _cartItemRepository.DeleteCartItem(itemToRemove, quantity)) return BadRequest("Cannot remove this item");
             return NoContent();
         }
     }

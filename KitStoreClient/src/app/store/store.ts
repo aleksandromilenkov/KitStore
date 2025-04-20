@@ -6,6 +6,7 @@ import { accountApi } from "../../features/account/accountApi";
 
 import { persistReducer, persistStore, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // uses localStorage by default
+import { catalogSlice } from "../../features/catalog/catalogSlice";
 
 // Persist config only for user slice
 const userPersistConfig = {
@@ -19,6 +20,7 @@ export const store = configureStore({
   reducer: {
     [accountApi.reducerPath]: accountApi.reducer,
     ui: uiSlice.reducer,
+    catalogSlice: catalogSlice.reducer,
     user: persistedUserReducer,
   },
   middleware: (getDefaultMiddleware) =>

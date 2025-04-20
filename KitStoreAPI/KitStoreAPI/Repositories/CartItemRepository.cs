@@ -19,11 +19,15 @@ namespace KitStoreAPI.Repositories
             return result > 0;
         }
 
-        public async Task<bool> DeleteCartItem(CartItem cartItem)
+        public async Task<bool> DeleteCartItem(CartItem cartItem, int quantity)
         {
             var existingItem = await _context.CartItems.FindAsync(cartItem.Id);
             if (existingItem == null) return false;
-            _context.CartItems.Remove(existingItem);
+            existingItem.Quantity -= quantity;
+            if (existingItem.Quantity <= 0)
+            {
+                _context.CartItems.Remove(existingItem);
+            }
             return await _context.SaveChangesAsync() > 0;
         }
 
