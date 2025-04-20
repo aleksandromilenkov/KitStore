@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using KitStoreAPI.Data;
 using KitStoreAPI.Entities;
+using KitStoreAPI.Enums;
 using KitStoreAPI.Interfaces;
 using KitStoreAPI.RequestHelpers;
 using Microsoft.EntityFrameworkCore;
@@ -41,8 +42,15 @@ namespace KitStoreAPI.Repositories
             }
             if (!string.IsNullOrEmpty(kitsQueryObject.Leagues))
             {
-                var leagueList = kitsQueryObject.Leagues.ToLower().Split(",").ToList(); // or we can use HashSet instead of list like this new HashSet<string>(brands.ToLower().Split(",")); since HashSets.Contains has speed O(1) and List.Contains O(n)
-                kitsQuery = kitsQuery.Where(k => leagueList.Contains(k.Club.League.ToString().ToLower()));
+                var leagueStrings = kitsQueryObject.Leagues.Split(",", StringSplitOptions.RemoveEmptyEntries);
+                var leagueEnums = leagueStrings
+                .Select(l => Enum.TryParse<Leagues>(l, true, out var parsed) ? parsed : (Leagues?)null)
+                .Where(l => l != null)
+                    .Select(l => l.Value)
+                    .ToList();
+
+                kitsQuery = kitsQuery.Where(k => leagueEnums.Contains(k.Club.League));
+
             }
             if (!string.IsNullOrWhiteSpace(kitsQueryObject.OrderBy))
             {
@@ -63,7 +71,8 @@ namespace KitStoreAPI.Repositories
             var kits = await kitsQuery.Skip(skipNumber).Take(kitsQueryObject.PageSize).ToListAsync();
             var paginationMetadata = new PaginationMetadata(totalItems, kitsQueryObject.PageNumber, kitsQueryObject.PageSize);
 
-            return new PagedResult<Kit>(kits, paginationMetadata);
+            var resultToReturn = new PagedResult<Kit>(kits, paginationMetadata);
+            return resultToReturn;
         }
 
         public async Task<Kit?> GetAsync(int kitId)

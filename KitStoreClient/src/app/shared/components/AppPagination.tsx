@@ -7,9 +7,9 @@ type Props = {
 };
 
 const AppPagination = ({metadata, onPageChange}: Props) => {
-    const {pageSize, currentPage, totalCount, totalPages} = metadata;
-    const startItem = (currentPage - 1) * pageSize +1;
-    const endItem = Math.min(currentPage * pageSize, totalCount);
+    const {pageSize, pageNumber, totalItems, totalPages} = metadata;
+    const startItem = (pageNumber - 1) * pageSize +1;
+    const endItem = Math.min(pageNumber * pageSize, totalItems);
   return (
     <Box
       display="flex"
@@ -17,12 +17,12 @@ const AppPagination = ({metadata, onPageChange}: Props) => {
       alignItems={"center"}
       mt={"3"}
     >
-        <Typography>Displaying {startItem}-{endItem} of {totalCount} items</Typography>
+        <Typography>Displaying {startItem}-{endItem} of {totalItems} items</Typography>
       <Pagination
         color="secondary"
         size="large"
         count={totalPages}
-        page={currentPage}
+        page={pageNumber}
         onChange={(_, page)=>onPageChange(page)}
       />
     </Box>

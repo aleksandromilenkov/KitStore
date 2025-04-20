@@ -7,6 +7,8 @@ import { accountApi } from "../../features/account/accountApi";
 import { persistReducer, persistStore, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // uses localStorage by default
 import { catalogSlice } from "../../features/catalog/catalogSlice";
+import { catalogApi } from "../../features/catalog/catalogApi";
+import { cartApi } from "../../features/cart/cartApi";
 
 // Persist config only for user slice
 const userPersistConfig = {
@@ -18,7 +20,9 @@ const persistedUserReducer = persistReducer(userPersistConfig, userSlice.reducer
 
 export const store = configureStore({
   reducer: {
+    [catalogApi.reducerPath]: catalogApi.reducer,
     [accountApi.reducerPath]: accountApi.reducer,
+    [cartApi.reducerPath]: cartApi.reducer,
     ui: uiSlice.reducer,
     catalogSlice: catalogSlice.reducer,
     user: persistedUserReducer,
@@ -28,7 +32,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(accountApi.middleware),
+    }).concat(catalogApi.middleware, accountApi.middleware, cartApi.middleware),
 });
 
 export const persistor = persistStore(store);

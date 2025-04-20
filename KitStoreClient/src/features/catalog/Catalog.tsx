@@ -24,7 +24,7 @@ const Catalog = () => {
         <Filters filtersData={filtersData} catalogSlice={productParams}/>
       </Grid2>
       <Grid2 size={9}>
-        {data.items && data.items.length > 0 ? (<>
+        {data?.items && data?.items?.length > 0 ? (<>
         <ProductList products={data.items} />
         <AppPagination metadata={data.pagination} onPageChange={onPageChangeHandler}/>
         </>) : <Typography variant="h5">There are no results for this filter</Typography>}

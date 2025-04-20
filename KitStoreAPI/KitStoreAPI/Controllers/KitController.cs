@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Azure;
 using KitStoreAPI.DTOs;
 using KitStoreAPI.Entities;
+using KitStoreAPI.Extentions;
 using KitStoreAPI.Interfaces;
 using KitStoreAPI.RequestHelpers;
 using KitStoreAPI.Services;
@@ -19,7 +21,8 @@ namespace KitStoreAPI.Controllers
         public async Task<ActionResult<PagedResult<Kit>>> GetKits([FromQuery] KitsQueryObject kitQueryObject)
         {
             var result = await _kitRepository.GetAllKits(kitQueryObject);
-            return result;
+            Response.AddPaginationHeader(result.Pagination);
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
