@@ -1,10 +1,17 @@
+type RoleValues = string[] | { $values: string[] };
+
 export type User = {
-    email: string;
-    userName: string;
-    roles: {id:number, values: string[]};
-    pictureUrl?: string;
-    token: string;
+  email: string;
+  userName: string;
+  roles: {
+    id: number;
+    values: RoleValues;
+    $values: string[] | null;
   };
+  pictureUrl?: string;
+  token: string;
+};
+
   
   export type Address = {
     name: string;

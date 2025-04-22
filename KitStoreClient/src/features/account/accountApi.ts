@@ -14,6 +14,18 @@ export const accountApi = createApi({
     endpoints: (builder)=>({
         login: builder.mutation<User, LoginSchema>({
             query: (creds)=>({url:"account/login", method:"POST", body: creds}),
+            transformResponse: (response: User) => {
+                const normalizedValues = Array.isArray(response.roles.values)
+                  ? response.roles.values
+                  : response.roles.$values ?? [];
+                return {
+                  ...response,
+                  roles: {
+                    ...response.roles,
+                    values: normalizedValues,
+                  },
+                };
+              },
         }),
         register: builder.mutation<void, object>({
             query: (creds)=> ({url:"account/register", method:"POST", body:creds}),
@@ -29,21 +41,29 @@ export const accountApi = createApi({
             }
         }),
         userInfo: builder.query<User, void>({
-            query: ()=> ({url:"account/user-info"}),
+            query: () => ({ url: "account/user-info" }),
             providesTags: ["UserInfo"],
-            async onQueryStarted(_, { dispatch, queryFulfilled, getState }) {
+            onQueryStarted: async (_, { dispatch, queryFulfilled, getState }) => {
                 try {
                   const { data } = await queryFulfilled;
                   const existingUser = (getState() as RootState).user.user;
+                  // Fix for .NET serialized roles
+                  const normalizedValues = Array.isArray(data.roles.values)
+                    ? data.roles.values
+                    : data.roles?.$values ?? [];
                   dispatch(setUser({
                     ...data,
-                    token: existingUser?.token || "", // keep the old one instead of creatin new one on every req
+                    roles: {
+                      ...data.roles,
+                      values: normalizedValues,
+                    },
+                    token: existingUser?.token || "",
                   }));
                 } catch (err) {
                   console.log("Failed to fetch user info:", err);
                 }
               }
-        }),
+            }),              
         fetchAddress: builder.query<Address, void>({
             query:()=>({url:"account/address"})
         }),

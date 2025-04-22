@@ -24,6 +24,9 @@ const UserMenu = ({user}:Props) => {
         dispatch(setUser(null));
         navigate("/login");
     }
+    const roleValues = Array.isArray(user.roles.values)
+        ? user.roles.values
+        : user.roles?.$values ?? [];
     return (
       <div>
         <Button
@@ -55,7 +58,7 @@ const UserMenu = ({user}:Props) => {
             </ListItemIcon>
             <ListItemText>My Orders</ListItemText>
           </MenuItem>
-          {user?.roles?.values?.includes("Admin") &&
+          {roleValues.includes("Admin") &&
           <MenuItem component={Link} to="/inventory">
             <ListItemIcon>
                 <Inventory/>

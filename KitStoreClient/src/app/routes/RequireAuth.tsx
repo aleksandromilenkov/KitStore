@@ -8,7 +8,10 @@ const RequireAuth = () => {
     if(isLoading) return <LinearProgress/>
     if(!user) return <Navigate to={"/login"} state={{from: location}}/>
     const adminRoutes = ["/inventory", "/admin-dashboard"];
-    if(adminRoutes.includes(location.pathname) && !user.roles.values?.includes("Admin")) {
+    const roleValues = Array.isArray(user.roles.values)
+    ? user.roles.values
+    : user.roles?.$values ?? [];
+    if(adminRoutes.includes(location.pathname) && !roleValues.includes("Admin")) {
       return <Navigate to={"/"} replace/>
     }
   return (
