@@ -1,13 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { ProductParams } from "../../app/models/productParams";
-import { KitTypes } from "../../app/models/kitTypes";
 const initialState: ProductParams = {
     pageNumber: 1,
     pageSize: 8,
     searchTerm: "",
     orderBy: "name",
     leagues: [],
-    kitType: KitTypes.Home.toString(),
+    kitType: null,
 }
 export const catalogSlice = createSlice({
     name: 'catalogSlice',
