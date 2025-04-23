@@ -36,7 +36,7 @@ const InventoryPage = () => {
         <> 
         <Box display="flex" justifyContent="space-between">
             <Typography sx={{p:2}} variant="h4">Inventory</Typography>
-            <Button sx={{m:2}} size="large" variant="contained" onClick={()=>setEditMode(true)}>Create</Button>
+            <Button sx={{m:2}} size="large" variant="contained" onClick={()=>setEditMode(false)}>Create Kit</Button>
         </Box>
         <TableContainer component={Paper}>
             <Table sx={{minWidth:650}}>

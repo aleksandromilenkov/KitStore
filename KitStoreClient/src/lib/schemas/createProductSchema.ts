@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { KitTypes } from "../../app/models/kitTypes";
 
 const fileSchema = z.instanceof(File).refine(file => file.size > 0, { message: "File must be uploaded"})
 .transform(file=>({
@@ -8,11 +9,11 @@ const fileSchema = z.instanceof(File).refine(file => file.size > 0, { message: "
 
 export const createProductSchema = z.object({
     name: z.string({required_error: "Name of product is required"}),
-    description: z.string({required_error: "Description is required"}).min(10, {message: "Description must be at least 10 characters"}),
+    clubId: z.number({required_error: "Club is required"}),
     price: z.coerce.number({required_error: "Price is required"}).min(100, "Price must be at least $1.00"),
-    type: z.string({required_error: "Type is required"}),
-    brand: z.string({required_error: "Brand is required"}),
+    kitType: z.nativeEnum(KitTypes, {required_error: "Kit Type is required"}),
     quantityInStock: z.coerce.number({required_error: "Quantity is required"}).min(1, "Quantity must be at least 1"),
+    seasonYear: z.coerce.number({required_error: "Season Year is required"}).min(1890, "Latest Season must be at least 1890"),
     pictureUrl: z.string().optional(),
     file: fileSchema.optional()
 }).refine((data)=> data.pictureUrl || data.file, {message:"Please provide an image", path: ['file']} )
