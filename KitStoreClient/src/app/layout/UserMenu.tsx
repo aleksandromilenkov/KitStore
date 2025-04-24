@@ -1,7 +1,7 @@
 import { Button, Menu, MenuItem, Fade, ListItemIcon, ListItemText } from "@mui/material";
 import React, { useState } from "react";
 import { User } from  "../models/user";
-import { History, Inventory, Logout, Person } from "@mui/icons-material";
+import { History, Inventory, Logout, Person, SportsFootball } from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../features/account/userSlice";
@@ -58,13 +58,21 @@ const UserMenu = ({user}:Props) => {
             </ListItemIcon>
             <ListItemText>My Orders</ListItemText>
           </MenuItem>
-          {roleValues.includes("Admin") &&
+          {roleValues.includes("Admin") &&(<>
           <MenuItem component={Link} to="/inventory">
             <ListItemIcon>
                 <Inventory/>
             </ListItemIcon>
             <ListItemText>Inventory</ListItemText>
           </MenuItem>
+          <MenuItem component={Link} to="/clubs">
+            <ListItemIcon>
+                <SportsFootball/>
+            </ListItemIcon>
+            <ListItemText>Clubs</ListItemText>
+          </MenuItem>
+          </>
+          )
           }
           <MenuItem onClick={handleLogout}>
             <ListItemIcon>

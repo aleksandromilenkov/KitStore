@@ -2,11 +2,14 @@ import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from "@mui/
 import { SelectInputProps } from "@mui/material/Select/SelectInput";
 import { FieldValues, useController, UseControllerProps } from "react-hook-form"
 
+type SelectItem = string | { label: string; value: string | number };
+
 type Props<T extends FieldValues> = {
-    label: string,
-    name: keyof T,
-    items: string[]
-} & UseControllerProps<T> & Partial<SelectInputProps> // makes all properties optional in SelectInputProps
+  label: string;
+  name: keyof T;
+  items: SelectItem[];
+} & UseControllerProps<T> & Partial<SelectInputProps>;
+ // makes all properties optional in SelectInputProps
 export default function AppSelectInput<T extends FieldValues>(props: Props<T>){
     const {fieldState, field} = useController({...props});
   return (
@@ -17,9 +20,17 @@ export default function AppSelectInput<T extends FieldValues>(props: Props<T>){
             label={props.label}
             onChange={field.onChange}
         >
-            {props.items?.map((item, idx)=> (
-                <MenuItem value={item} key={idx}>{item}</MenuItem>
-            ))}
+        {props.items?.map((item, idx) =>
+        typeof item === "string" ? (
+        <MenuItem value={item} key={idx}>
+        {item}
+        </MenuItem>
+        ) : (
+            <MenuItem value={item.value} key={idx}>
+            {item.label}
+            </MenuItem>
+            )
+        )}
         </Select>
         <FormHelperText>{fieldState.error?.message}</FormHelperText>
     </FormControl>

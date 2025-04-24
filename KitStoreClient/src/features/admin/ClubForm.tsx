@@ -4,7 +4,6 @@ import { Box, Button, Grid2, Paper, Typography } from "@mui/material";
 import AppTextInput from "../../app/shared/components/AppTextInput";
 import AppSelectInput from "../../app/shared/components/AppSelectInput";
 import AppDropzone from "../../app/shared/components/AppDropzone";
-import { Kit } from "../../app/models/kit";
 import { useEffect } from "react";
 import { useCreateClubMutation, useUpdateClubMutation } from "./adminApi";
 import { LoadingButton } from "@mui/lab";
@@ -16,10 +15,10 @@ import { Leagues } from "../../app/models/leagues";
 type Props = {
     club: Club | null,
     setEditMode: (value:boolean)=>void,
-    setProduct: (value:Kit | null)=>void,
+    setClub: (value:Club | null)=>void,
     refetch: ()=>void;
 }
-const ClubForm = ({club, setEditMode, setProduct, refetch}:Props) => {
+const ClubForm = ({club, setEditMode, setClub, refetch}:Props) => {
     const {control, handleSubmit, watch, reset, setError, formState: {isSubmitting}} = useForm<CreateClubSchema>({
         mode:"onTouched",
         resolver: zodResolver(createClubSchema)
@@ -50,15 +49,21 @@ const ClubForm = ({club, setEditMode, setProduct, refetch}:Props) => {
             if(club) await updateClub({id: club.id, club: formData}).unwrap();
             else await createClub(formData).unwrap();
             setEditMode(false);
-            setProduct(null);
+            setClub(null);
             refetch();
         }catch(error){
             console.log(error);
             handleApiError<CreateClubSchema>(error, setError, ['league', 'country', 'file', 'name'])
         }
     }
-    const countriesArray = Object.keys(Countries).filter(key => isNaN(Number(key))) as Array<keyof typeof Countries>;
-    const leaguesArray = Object.keys(Leagues).filter(key => isNaN(Number(key))) as Array<keyof typeof Leagues>;
+    const countriesArray = Object.entries(Countries)
+    .filter(([key]) => isNaN(Number(key))) // Get name-value pairs, exclude reverse mapping
+    .map(([key, value]) => ({ label: key, value }));
+  
+    const leaguesArray = Object.entries(Leagues)
+    .filter(([key]) => isNaN(Number(key)))
+    .map(([key, value]) => ({ label: key, value }));
+  
   return (
     <Box component={Paper} sx={{p:4, maxWidth: 'lg', mx:"auto"}}>
         <Typography variant="h4" sx={{mb:4}}>
@@ -73,7 +78,7 @@ const ClubForm = ({club, setEditMode, setProduct, refetch}:Props) => {
                     {countriesArray && <AppSelectInput items={countriesArray} control={control} name="country" label="Country"/>}
                 </Grid2>
                 <Grid2 size={6}>
-                    {leaguesArray && <AppSelectInput items={leaguesArray} control={control} name="league" label="Type"/>}
+                    {leaguesArray && <AppSelectInput items={leaguesArray} control={control} name="league" label="League name"/>}
                 </Grid2>
                 <Grid2 size={12} display="flex" justifyContent="space-between" alignItems="center">
                    <AppDropzone name="file" control={control}/>
@@ -90,7 +95,7 @@ const ClubForm = ({club, setEditMode, setProduct, refetch}:Props) => {
             <Box display="flex" justifyContent="space-between" sx={{mt:3}}>
                 <Button variant="contained" color="inherit" onClick={()=>{
                     setEditMode(false)
-                    setProduct(null);
+                    setClub(null);
                 }}>Cancel</Button>
                 <LoadingButton
                   loading= {isSubmitting}
