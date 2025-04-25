@@ -49,7 +49,11 @@ const Filters = ({filtersData:data, catalogSlice}:Props) => {
             <CheckboxButtons checkboxes={data.leagues} checked={catalogSlice.leagues} onChange={leaguesHandler}/>
         </Paper>
         <Paper sx={{padding:3}}>
-            <RadioButtonGroup selectedValue={catalogSlice.kitType.toString()} onChange={kitTypesHandler} options={kitOptions}/>
+        <RadioButtonGroup 
+            selectedValue={catalogSlice.kitType?.toString() ?? ""} 
+            onChange={kitTypesHandler} 
+            options={kitOptions}
+        />
         </Paper>
         <Button onClick={()=> dispatch(resetParams())}>Reset filters</Button>
     </Box>

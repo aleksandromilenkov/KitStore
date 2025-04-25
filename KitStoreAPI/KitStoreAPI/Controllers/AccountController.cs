@@ -129,8 +129,10 @@ namespace KitStoreAPI.Controllers
         [HttpGet("address")]
         public async Task<ActionResult<Address>> GetSavedAddress()
         {
-            var address = await _userManager.Users.Where(u => u.UserName == User.Identity!.Name)
-                .Select(u => u.Address).FirstOrDefaultAsync();
+            if (User.Identity?.IsAuthenticated == false) return NoContent();
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Unauthorized();
+            var address = user.Address;
             if (address == null) return NoContent();
             return Ok(address);
         }

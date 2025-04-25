@@ -9,7 +9,7 @@ namespace KitStoreAPI.Repositories
     {
         public async Task<bool> CreateCartItem(CartItem cartItem)
         {
-            var existingItem = await _context.CartItems.FindAsync(cartItem.Id);
+            var existingItem = await _context.CartItems.FirstOrDefaultAsync(ci => ci.KitId == cartItem.KitId && ci.CartId == cartItem.CartId);
             if (existingItem == null) { 
                 _context.CartItems.Add(cartItem);
             } else {

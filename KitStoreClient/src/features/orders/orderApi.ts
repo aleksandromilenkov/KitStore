@@ -9,14 +9,14 @@ export const orderApi = createApi({
     tagTypes: ["Orders"],
     endpoints: (builder) => ({
         fetchOrders: builder.query<Order[], void>({
-            query: ()=> "orders",
+            query: ()=> "order",
             providesTags: ["Orders"],
         }),
         fetchOrderDetails: builder.query<Order, number>({
-            query: (id) => `orders/${id}`
+            query: (id) => `order/${id}`
         }),
         createOrder: builder.mutation<Order, CreateOrder>({
-            query: (orderToCreate)=> ({url:"orders", method:"POST", body: orderToCreate}),
+            query: (orderToCreate)=> ({url:"order", method:"POST", body: orderToCreate}),
             onQueryStarted: async (_, { dispatch, queryFulfilled }) => {
                 try{
                     await queryFulfilled;

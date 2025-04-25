@@ -9,7 +9,7 @@ export const checkoutApi = createApi({
     baseQuery: baseQueryWithErrorHandling,
     endpoints: (builder)=>({
         createOrUpdateIntent: builder.mutation<Cart, void>({
-            query: ()=> ({url:"payments", method:"POST"}),
+            query: ()=> ({url:"payment", method:"POST"}),
             onQueryStarted: async(_, {dispatch, queryFulfilled})=>{
                 try{
                     const {data} = await queryFulfilled;
