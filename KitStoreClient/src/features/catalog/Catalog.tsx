@@ -7,13 +7,21 @@ import { KitTypes } from "../../app/models/kitTypes";
 import Filters from "./Filters";
 import ProductList from "./ProductList";
 import AppPagination from "../../app/shared/components/AppPagination";
+import { useFetchCartQuery } from "../cart/cartApi";
+import { useEffect } from "react";
 
 const Catalog = () => {
   const productParams = useAppSelector((state) => state.catalogSlice);
   const { data, isLoading } = useFetchProductsQuery(productParams);
+  const {data:cart, refetch} = useFetchCartQuery();
   const filtersData = {leagues: Object.keys(Leagues).filter(key => isNaN(Number(key))), kitTypes:Object.keys(KitTypes).filter(key => isNaN(Number(key)))};
   const dispatch = useAppDispatch();
-  if (isLoading || !data || !productParams) return <LinearProgress/>;
+  useEffect(() => {
+   if (!cart) {
+     refetch();
+   }
+ }, [cart, refetch]);
+  if (isLoading || !data || !productParams || !cart) return <LinearProgress/>;
   const onPageChangeHandler = (page:number)=>{
     dispatch(setPageNumber(page));
     window.scrollTo({top:0, behavior:"smooth"})
@@ -25,7 +33,7 @@ const Catalog = () => {
       </Grid2>
       <Grid2 size={9}>
         {data?.items && data?.items?.length > 0 ? (<>
-        <ProductList products={data.items} />
+        <ProductList products={data.items} cart={cart}/>
         <AppPagination metadata={data.pagination} onPageChange={onPageChangeHandler}/>
         </>) : <Typography variant="h5">There are no results for this filter</Typography>}
         

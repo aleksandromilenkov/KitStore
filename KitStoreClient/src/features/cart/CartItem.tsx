@@ -49,14 +49,13 @@ const CartItem = ({ item }: Props) => {
           }}
         />
         <Box display="flex" flexDirection="column" gap={1}>
-          <Typography variant="h6">{item.kit.club.name}</Typography>
+          <Typography variant="h6">{item.kit.club.name} {item.kit.kitType.toString()} {item.kit.seasonYear-1}/{item.kit.seasonYear}</Typography>
           <Box display="flex" alignItems="center" gap={3}>
             <Typography sx={{ fontSize: "1.1rem" }}>
-              {item.kit.price} x {item.quantity}{" "}
-              {/*because price is long, and long must be divided by 100*/}
+              ${item.kit.price} x {item.quantity}{" "}
             </Typography>
             <Typography sx={{ fontSize: "1.1rem" }} color="primary">
-              {item.kit.price * item.quantity}
+              ${item.kit.price * item.quantity}
             </Typography>
           </Box>
           <Grid2 container spacing={1} alignItems="center">

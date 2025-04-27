@@ -17,7 +17,7 @@ namespace KitStoreAPI.Repositories
 
         public async Task<Order?> GetOrderByIdAndEmail(int id, string email)
         {
-            var order = await _context.Orders.Where(o => o.BuyerEmail == email && o.Id == id).FirstOrDefaultAsync();
+            var order = await _context.Orders.Where(o => o.BuyerEmail == email && o.Id == id).Include(o => o.OrderItems).FirstOrDefaultAsync();
             return order;
         }
 

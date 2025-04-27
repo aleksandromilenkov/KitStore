@@ -74,7 +74,7 @@ namespace KitStoreAPI.Controllers
             }
         }
 
-        [HttpGet("id:int")]
+        [HttpGet("{id:int}")]
         public async Task<ActionResult<OrderDTO>> GetOrderDetails(int id)
         {
             var order = await _orderRepository.GetOrderByIdAndEmail(id ,User.GetUserEmail());

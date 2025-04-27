@@ -60,22 +60,22 @@ import { useCart } from "../../../lib/hooks/useCart";
           <Box mt={2}>
             <Box display="flex" justifyContent="space-between" mb={1}>
               <Typography color="textSecondary">Subtotal</Typography>
-              <Typography>{subtotal}</Typography>
+              <Typography>${subtotal}</Typography>
             </Box>
             <Box display="flex" justifyContent="space-between" mb={1}>
               <Typography color="textSecondary">Discount</Typography>
               <Typography color="success">
-                {discount}
+                ${discount}
               </Typography>
             </Box>
             <Box display="flex" justifyContent="space-between" mb={1}>
               <Typography color="textSecondary">Delivery fee</Typography>
-              <Typography>{deliveryFee}</Typography>
+              <Typography>${deliveryFee}</Typography>
             </Box>
             <Divider sx={{ my: 2 }} />
             <Box display="flex" justifyContent="space-between" mb={1}>
               <Typography color="textSecondary">Total</Typography>
-              <Typography>{subtotal + deliveryFee - discount}</Typography>
+              <Typography>${subtotal + deliveryFee - discount}</Typography>
             </Box>
           </Box>
   

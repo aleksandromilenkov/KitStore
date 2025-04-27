@@ -14,7 +14,9 @@ namespace KitStoreAPI.MappingProfiles
             CreateMap<CreateKitDTO, Kit>().ReverseMap();
             CreateMap<ClubDTO, Club>().ReverseMap();
             CreateMap<CreateClubDTO, Club>().ReverseMap();
-            CreateMap<OrderItem, OrderItemDTO>();
+            CreateMap<OrderItem, OrderItemDTO>()
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.ItemOrdered.Name))
+            .ForMember(dest => dest.PictureUrl, opt => opt.MapFrom(src => src.ItemOrdered.PictureUrl));
 
             CreateMap<UpdateCartItemDTO, CartItem>().ReverseMap()
             .ForMember(dest => dest.Id, opt => opt.Ignore()); // Prevents overwriting ID

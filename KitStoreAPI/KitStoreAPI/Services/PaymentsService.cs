@@ -14,11 +14,15 @@ namespace RestoreAPI.Services
             var subtotal = cart.Items.Sum(i => i.Quantity * i.Kit.Price);
             var deliveryFee = subtotal > 1000 ? 0 : 50;
             double discount = 0;
-            if (cart.AppCoupon != null) {
+            if (cart.AppCoupon != null)
+            {
                 discount = discountService.CalculateDiscountFromAmount(cart.AppCoupon, subtotal);
             }
             var totalAmount = subtotal + deliveryFee - discount;
-            if (string.IsNullOrEmpty(cart.PaymentIntentId)) {
+
+            if (string.IsNullOrEmpty(cart.PaymentIntentId))
+            {
+                // No existing intent, create a new one
                 var options = new PaymentIntentCreateOptions
                 {
                     Amount = (long?)totalAmount,
@@ -26,14 +30,37 @@ namespace RestoreAPI.Services
                     PaymentMethodTypes = ["card"]
                 };
                 intent = await service.CreateAsync(options);
-            } else {
-                var options = new PaymentIntentUpdateOptions
-                {
-                    Amount = (long?)totalAmount,
-                };
-                await service.UpdateAsync(cart.PaymentIntentId, options);
             }
+            else
+            {
+                // Fetch the existing intent first
+                var existingIntent = await service.GetAsync(cart.PaymentIntentId);
+
+                if (existingIntent.Status == "succeeded")
+                {
+                    // Old intent succeeded, create a NEW PaymentIntent
+                    var options = new PaymentIntentCreateOptions
+                    {
+                        Amount = (long?)totalAmount,
+                        Currency = "usd",
+                        PaymentMethodTypes = ["card"]
+                    };
+                    intent = await service.CreateAsync(options);
+                }
+                else
+                {
+                    // Old intent still pending, safe to update
+                    var options = new PaymentIntentUpdateOptions
+                    {
+                        Amount = (long?)totalAmount,
+                    };
+                    await service.UpdateAsync(cart.PaymentIntentId, options);
+                    intent = existingIntent;
+                }
+            }
+
             return intent;
         }
+
     }
 }

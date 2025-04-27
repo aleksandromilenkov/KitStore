@@ -31,6 +31,11 @@ namespace KitStoreAPI.Repositories
         {
             var cartToRemove = await _context.Carts.FirstOrDefaultAsync(c=>c.UserId == userId);
             if (cartToRemove == null) return false;
+            var cartItemsToRemove = await _context.CartItems.Where(ci => ci.CartId == cartToRemove.Id).ToListAsync();
+            if (cartItemsToRemove.Any())
+            {
+                _context.CartItems.RemoveRange(cartItemsToRemove);
+            }
             _context.Remove(cartToRemove);
             var result = await _context.SaveChangesAsync();
             return result > 0;

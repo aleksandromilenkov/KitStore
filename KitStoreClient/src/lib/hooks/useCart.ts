@@ -5,7 +5,7 @@ export const useCart = () => {
       const [clearCart] = useClearCartMutation();
       const cartCoupon = cart?.coupon;
       const subtotal = cart?.items?.reduce((acc, val) => acc + val.kit.price * val.quantity, 0) ?? 0;
-      const deliveryFee = subtotal / 100 > 100 ? 0 : 500;
+      const deliveryFee = subtotal > 100 ? 0 : 5;
       const discount = cart?.coupon?.percentOff
             ? Math.round((subtotal * (cart.coupon.percentOff / 100)) * 100) / 100
             : cart?.coupon?.amountOff

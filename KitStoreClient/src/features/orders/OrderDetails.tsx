@@ -105,7 +105,7 @@ const OrderDetails = () => {
                   x {item.quantity}
                 </TableCell>
                 <TableCell align="right" sx={{ p: 4 }}>
-                  {(item.price * item.quantity)}
+                  ${(item.price * item.quantity)}
                 </TableCell>
               </TableRow>
             ))}
@@ -118,7 +118,7 @@ const OrderDetails = () => {
             Subtotal
           </Typography>
           <Typography component="dd" variant="body2" fontWeight="300">
-            {order.subtotal}
+            ${order.subtotal}
           </Typography>
         </Box>
         <Box component="dl" display="flex" justifyContent="space-between">
@@ -131,7 +131,7 @@ const OrderDetails = () => {
             fontWeight="300"
             color="green"
           >
-            {(order.discount)}
+            ${(order.discount)}
           </Typography>
         </Box>
         <Box component="dl" display="flex" justifyContent="space-between">
@@ -139,7 +139,7 @@ const OrderDetails = () => {
             Delivery fee
           </Typography>
           <Typography component="dd" variant="body2" fontWeight="300">
-            {(order.deliveryFee)}
+            ${(order.deliveryFee)}
           </Typography>
         </Box>
       </Box>
@@ -148,7 +148,7 @@ const OrderDetails = () => {
           Total
         </Typography>
         <Typography component="dd" variant="body2" fontWeight="700">
-          {(order.total)}
+          ${(order.total)}
         </Typography>
       </Box>
     </Card>

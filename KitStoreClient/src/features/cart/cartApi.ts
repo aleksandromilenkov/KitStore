@@ -84,7 +84,6 @@ export const cartApi = createApi({
       onQueryStarted: async(_, {dispatch}) => {
         dispatch(cartApi.util.updateQueryData('fetchCart', undefined, (draft) => {
           draft.items = [];
-          draft.id = NaN;
         }));
       }
     }),

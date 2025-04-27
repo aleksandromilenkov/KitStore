@@ -11,13 +11,22 @@ import { Link } from "react-router-dom";
 import { useAddItemToCartMutation, useFetchCartQuery } from "../cart/cartApi";
 import { toast } from "react-toastify";
 import { CreateCartItem } from "../../app/models/createCartItem";
+import { useEffect } from "react";
+import { Cart } from "../../app/models/cart";
 
 type Props = {
   product: Kit;
+  cart: Cart;
 }; 
 const ProductCard = ({ product }: Props) => {
+  console.log(product)
    const [addToCart, {isLoading: isLoading} ] = useAddItemToCartMutation();
-   const {data:cart} = useFetchCartQuery();
+   const {data:cart, refetch} = useFetchCartQuery();
+   useEffect(() => {
+    if (!cart) {
+      refetch();
+    }
+  }, [cart, refetch]);
    if(!cart) return <p>No Cart Found</p>
    const addToCartHandler = async ()=>{
        const cartItemToCreate: CreateCartItem = {
@@ -52,10 +61,10 @@ const ProductCard = ({ product }: Props) => {
           variant="subtitle2"
           sx={{ textTransform: "uppercase" }}
         >
-          {product.name}
+          {product.club?.name} {product.kitType?.toString()} {product.seasonYear-1}/{product.seasonYear}
         </Typography>
         <Typography variant="h6" sx={{ color: "secondary.main" }}>
-          {product.price}
+          ${product.price}
         </Typography>
       </CardContent>
       <Box sx={{ justifyContent: "space-between" }}>
