@@ -38,9 +38,6 @@ export const adminApi = createApi({
         fetchClubs: builder.query<Club[], void>({
             query: () => ({ url: "club" }),
             providesTags: ["Clubs"],
-            transformResponse: (response: { $values: Club[] }) => {
-                return response.$values ?? [];
-              }
           }),
           
         createClub: builder.mutation<Club, FormData>({

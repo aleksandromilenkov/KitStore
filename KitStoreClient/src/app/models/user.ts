@@ -1,13 +1,9 @@
-type RoleValues = string[] | { $values: string[] };
+
 
 export type User = {
   email: string;
   userName: string;
-  roles: {
-    id: number;
-    values: RoleValues;
-    $values: string[] | null;
-  };
+  roles: string[];
   pictureUrl?: string;
   token: string;
 };

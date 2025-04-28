@@ -44,6 +44,7 @@ const InventoryPage = () => {
                     <TableRow>
                         <TableCell>#</TableCell>
                         <TableCell align="left">Kit</TableCell>
+                        <TableCell align="right">Club</TableCell>
                         <TableCell align="right">Price</TableCell>
                         <TableCell align="center">Type</TableCell>
                         <TableCell align="center">Season</TableCell>
@@ -70,9 +71,10 @@ const InventoryPage = () => {
                                         <span>{product.name}</span>
                                 </Box>
                             </TableCell>
-                            <TableCell align="right">${(product.price)}</TableCell>
+                            <TableCell align="right">{(product.club.name)}</TableCell>
+                            <TableCell align="right">${(product.price.toFixed(2))}</TableCell>
                             <TableCell align="center">{product.kitType}</TableCell>
-                            <TableCell align="center">{product.seasonYear}</TableCell>
+                            <TableCell align="center">{`${product.seasonYear -1}/${product.seasonYear}`}</TableCell>
                             <TableCell align="center">{product.quantityInStock}</TableCell>
                             <TableCell align="right">
                                 <Button startIcon={<Edit/>} onClick={()=>{

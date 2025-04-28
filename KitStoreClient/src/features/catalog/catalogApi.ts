@@ -20,12 +20,11 @@ export const catalogApi = createApi({
                 if (leagues && leagues.length > 0) params.append("leagues", leagues.join(","));
                 return { url: `kit?${params.toString()}` };
             },
-            transformResponse: (response: {items:{$values:Kit[]}, pagination: Pagination}, meta) => {
+            transformResponse: (response: {items: Kit[], pagination: Pagination}, meta) => {
                 const paginationHeader = meta?.response?.headers.get('Pagination');
                 const pagination = paginationHeader ? JSON.parse(paginationHeader) : response.pagination;
-            
                 return {
-                    items: response.items?.$values ?? [],
+                    items: response.items,
                     pagination
                 };
             }

@@ -14,18 +14,6 @@ export const accountApi = createApi({
     endpoints: (builder)=>({
         login: builder.mutation<User, LoginSchema>({
             query: (creds)=>({url:"account/login", method:"POST", body: creds}),
-            transformResponse: (response: User) => {
-                const normalizedValues = Array.isArray(response.roles.values)
-                  ? response.roles.values
-                  : response.roles.$values ?? [];
-                return {
-                  ...response,
-                  roles: {
-                    ...response.roles,
-                    values: normalizedValues,
-                  },
-                };
-              },
         }),
         register: builder.mutation<void, object>({
             query: (creds)=> ({url:"account/register", method:"POST", body:creds}),
@@ -47,16 +35,8 @@ export const accountApi = createApi({
                 try {
                   const { data } = await queryFulfilled;
                   const existingUser = (getState() as RootState).user.user;
-                  // Fix for .NET serialized roles
-                  const normalizedValues = Array.isArray(data.roles.values)
-                    ? data.roles.values
-                    : data.roles?.$values ?? [];
                   dispatch(setUser({
                     ...data,
-                    roles: {
-                      ...data.roles,
-                      values: normalizedValues,
-                    },
                     token: existingUser?.token || "",
                   }));
                 } catch (err) {

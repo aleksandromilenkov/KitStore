@@ -24,9 +24,7 @@ const UserMenu = ({user}:Props) => {
         dispatch(setUser(null));
         navigate("/login");
     }
-    const roleValues = Array.isArray(user.roles.values)
-        ? user.roles.values
-        : user.roles?.$values ?? [];
+    const roleValues = user.roles;
     return (
       <div>
         <Button

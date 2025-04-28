@@ -80,10 +80,10 @@ const ProductForm = ({product, setEditMode, setProduct, refetch}:Props) => {
                     {<AppSelectInput items={kitTypesArray} control={control} name="kitType" label="Kit Type"/>}
                 </Grid2>
                 <Grid2 size={12}>
-                <AppTextInput type="number" control={control} name="price" label="Price"/>
+                   <AppTextInput type="number" control={control} name="quantityInStock" label="Quantity in stock"/>
                 </Grid2>
                 <Grid2 size={12}>
-                   <AppTextInput type="number" control={control} name="quantityInStock" label="Quantity in stock"/>
+                <AppTextInput type="number" control={control} name="price" label="Price"/>
                 </Grid2>
                 <Grid2 size={12}>
                    <AppTextInput type="number" control={control} name="seasonYear" label="Season Year"/>

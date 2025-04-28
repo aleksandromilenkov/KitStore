@@ -18,7 +18,7 @@ namespace KitStoreAPI.DTOs
         public KitType KitType { get; set; }
         [Required]
         public required int SeasonYear { get; set; }
-        [Range(100, double.PositiveInfinity)]
+        [Range(1, double.PositiveInfinity)]
         public required double Price { get; set; }
     }
 }

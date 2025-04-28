@@ -1,13 +1,8 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithErrorHandling } from "../../app/api/baseApi";
-import { Cart, RawCart } from "../../app/models/cart";
+import { Cart } from "../../app/models/cart";
 import { CreateCartItem } from "../../app/models/createCartItem";
 import { DeleteCartItem } from "../../app/models/deleteCartItem";
-import { CartItem } from "../../app/models/cartItem";
-
-// const isCartItem = (product: Kit | CartItem): product is CartItem => {
-//   return (product as CartItem).quantity !== undefined;
-// };
 
 export const cartApi = createApi({
   reducerPath: "cartApi",
@@ -16,17 +11,6 @@ export const cartApi = createApi({
   endpoints: (builder) => ({
     fetchCart: builder.query<Cart, void>({
       query: () => ({ url: "cart" }),
-      transformResponse: (response: RawCart): Cart => {
-        const rawItems = response.items as CartItem[] | { $values: CartItem[] };
-        const items = Array.isArray(rawItems)
-          ? rawItems
-          : rawItems?.$values ?? [];
-    
-        return {
-          ...response,
-          items, // now definitely CartItem[]
-        };
-      },
       providesTags: ["Cart"],
     }),
     addItemToCart: builder.mutation<Cart, CreateCartItem>({

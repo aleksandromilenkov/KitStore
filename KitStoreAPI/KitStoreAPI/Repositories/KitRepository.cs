@@ -61,7 +61,7 @@ namespace KitStoreAPI.Repositories
                 {
                     kitsQuery = kitsQueryObject.IsDescending ? kitsQuery.OrderByDescending(k => k.SeasonYear) : kitsQuery.OrderBy(k => k.SeasonYear);
                 }
-                if (kitsQueryObject.OrderBy.Equals("Club", StringComparison.OrdinalIgnoreCase))
+                if (kitsQueryObject.OrderBy.Equals("Name", StringComparison.OrdinalIgnoreCase))
                 {
                     kitsQuery = kitsQueryObject.IsDescending ? kitsQuery.OrderByDescending(k => k.Club.Name) : kitsQuery.OrderBy(k => k.Club.Name);
                 }
