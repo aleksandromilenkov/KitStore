@@ -2,13 +2,11 @@ import { FieldValues, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, Button, Grid2, LinearProgress, Paper, Typography } from "@mui/material";
 import AppTextInput from "../../app/shared/components/AppTextInput";
-import { useFetchFiltersQuery } from "../catalog/catalogApi";
 import AppSelectInput from "../../app/shared/components/AppSelectInput";
 import AppDropzone from "../../app/shared/components/AppDropzone";
 import { Kit } from "../../app/models/kit";
 import { useEffect } from "react";
 import { useCreateProductMutation, useFetchClubsQuery, useUpdateProductMutation } from "./adminApi";
-import { LoadingButton } from "@mui/lab";
 import { handleApiError } from "../../lib/util";
 import { CreateProductSchema, createProductSchema } from "../../lib/schemas/createProductSchema";
 import { KitTypes } from "../../app/models/kitTypes";
@@ -19,16 +17,14 @@ type Props = {
     refetch: ()=>void;
 }
 const ProductForm = ({product, setEditMode, setProduct, refetch}:Props) => {
-    const {control, handleSubmit, watch, reset, setError, formState: {isSubmitting}} = useForm<CreateProductSchema>({
+    const {control, handleSubmit, watch, reset, setError, formState} = useForm<CreateProductSchema>({
         mode:"onTouched",
         resolver: zodResolver(createProductSchema)
     });
     const watchFile = watch("file");
-    const {data} = useFetchFiltersQuery();
     const {data:clubs, isLoading:isLoadingClubs} = useFetchClubsQuery();
     const [createProduct] = useCreateProductMutation();
     const [updateProduct] = useUpdateProductMutation();
-    console.log(refetch);
     useEffect(()=>{
         if(product) reset(product);
         return ()=>{
@@ -45,6 +41,7 @@ const ProductForm = ({product, setEditMode, setProduct, refetch}:Props) => {
     }
 
     const onSubmit = async (data: CreateProductSchema)=>{
+        console.log("SUBMITING KIT")
         console.log(data);
         try{
             const formData = createFormData(data);
@@ -56,10 +53,12 @@ const ProductForm = ({product, setEditMode, setProduct, refetch}:Props) => {
             refetch();
         }catch(error){
             console.log(error);
-            handleApiError<CreateProductSchema>(error, setError, ['clubId', 'seasonYear', 'file', 'name', 'pictureUrl', 'price', 'quantityInStock', 'kitType'])
+            handleApiError<CreateProductSchema>(error, setError, ['clubId', 'seasonYear', 'file','pictureUrl', 'price', 'quantityInStock', 'kitType'])
         }
     }
-    const kitTypesArray = Object.keys(KitTypes).filter(key => isNaN(Number(key))) as Array<keyof typeof KitTypes>;
+    const kitTypesArray = Object.entries(KitTypes)
+        .filter(([key]) => isNaN(Number(key)))
+        .map(([key, value]) => ({ label: key, value }));
     if(isLoadingClubs) return <LinearProgress/>
     return (
     <Box component={Paper} sx={{p:4, maxWidth: 'lg', mx:"auto"}}>
@@ -68,14 +67,17 @@ const ProductForm = ({product, setEditMode, setProduct, refetch}:Props) => {
         </Typography>
         <form onSubmit={handleSubmit(onSubmit)}>
             <Grid2 container spacing={3}>
-                <Grid2 size={12}>
-                   <AppTextInput control={control} name="name" label="Product name"/>
+                <Grid2 size={6}>
+                    {clubs && (<AppSelectInput
+                                items={clubs.map(c => ({ label: c.name, value: c.id }))}
+                                control={control}
+                                name="clubId"
+                                label="Club"
+                                />
+                    )}
                 </Grid2>
                 <Grid2 size={6}>
-                    {clubs && <AppSelectInput items={clubs.map(c=>c.id.toString())} control={control} name="clubId" label="Club"/>}
-                </Grid2>
-                <Grid2 size={6}>
-                    {data?.types && <AppSelectInput items={kitTypesArray} control={control} name="kitType" label="Kit Type"/>}
+                    {<AppSelectInput items={kitTypesArray} control={control} name="kitType" label="Kit Type"/>}
                 </Grid2>
                 <Grid2 size={12}>
                 <AppTextInput type="number" control={control} name="price" label="Price"/>
@@ -103,11 +105,9 @@ const ProductForm = ({product, setEditMode, setProduct, refetch}:Props) => {
                     setEditMode(false)
                     setProduct(null);
                 }}>Cancel</Button>
-                <LoadingButton
-                  loading= {isSubmitting}
-                  variant="contained" color="success" type="submit">
+                <Button onClick={()=>{console.log("SUBMIT KIT")}} variant="contained" color="success" type="submit" disabled={formState.isSubmitting}>
                     Submit
-                  </LoadingButton>
+                </Button>
             </Box>
         </form>
     </Box>

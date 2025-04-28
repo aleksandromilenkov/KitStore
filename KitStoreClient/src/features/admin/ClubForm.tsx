@@ -6,7 +6,6 @@ import AppSelectInput from "../../app/shared/components/AppSelectInput";
 import AppDropzone from "../../app/shared/components/AppDropzone";
 import { useEffect } from "react";
 import { useCreateClubMutation, useUpdateClubMutation } from "./adminApi";
-import { LoadingButton } from "@mui/lab";
 import { handleApiError } from "../../lib/util";
 import { createClubSchema, CreateClubSchema } from "../../lib/schemas/createClubSchema";
 import { Club } from "../../app/models/club";
@@ -19,10 +18,11 @@ type Props = {
     refetch: ()=>void;
 }
 const ClubForm = ({club, setEditMode, setClub, refetch}:Props) => {
-    const {control, handleSubmit, watch, reset, setError, formState: {isSubmitting}} = useForm<CreateClubSchema>({
+    const {control, handleSubmit, watch, reset, setError, formState} = useForm<CreateClubSchema>({
         mode:"onTouched",
         resolver: zodResolver(createClubSchema)
     });
+    console.log("Form Errors:", formState.errors)
     const watchFile = watch("file");
     const [createClub] = useCreateClubMutation();
     const [updateClub] = useUpdateClubMutation();
@@ -42,6 +42,7 @@ const ClubForm = ({club, setEditMode, setClub, refetch}:Props) => {
     }
 
     const onSubmit = async (data: CreateClubSchema)=>{
+        console.log("SUBMITTING CLUB")
         console.log(data);
         try{
             const formData = createFormData(data);
@@ -97,11 +98,9 @@ const ClubForm = ({club, setEditMode, setClub, refetch}:Props) => {
                     setEditMode(false)
                     setClub(null);
                 }}>Cancel</Button>
-                <LoadingButton
-                  loading= {isSubmitting}
-                  variant="contained" color="success" type="submit">
+                <Button onClick={()=>{console.log("SUBMITTT")}} variant="contained" color="success" type="submit" disabled={formState.isSubmitted}>
                     Submit
-                  </LoadingButton>
+                </Button>
             </Box>
         </form>
     </Box>

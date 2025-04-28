@@ -8,9 +8,8 @@ const fileSchema = z.instanceof(File).refine(file => file.size > 0, { message: "
 }))
 
 export const createProductSchema = z.object({
-    name: z.string({required_error: "Name of product is required"}),
     clubId: z.number({required_error: "Club is required"}),
-    price: z.coerce.number({required_error: "Price is required"}).min(100, "Price must be at least $1.00"),
+    price: z.coerce.number({required_error: "Price is required"}).min(1, "Price must be at least $1.00"),
     kitType: z.nativeEnum(KitTypes, {required_error: "Kit Type is required"}),
     quantityInStock: z.coerce.number({required_error: "Quantity is required"}).min(1, "Quantity must be at least 1"),
     seasonYear: z.coerce.number({required_error: "Season Year is required"}).min(1890, "Latest Season must be at least 1890"),
