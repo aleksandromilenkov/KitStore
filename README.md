@@ -15,6 +15,7 @@
 - 📦 View Past Orders
 - 🔍 Search, Filter, and Paginate Kits
 - 🧑‍💼 Admin Panel for managing Kits and Clubs (CRUD)
+- 🧑‍💼 User Panel for updating Profile Picture, Username and Password  
 - ☁️ Image Upload (via Cloudinary)
 - ✨ Clean and responsive UI built with Material UI & CSS
 
