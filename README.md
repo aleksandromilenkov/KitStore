@@ -119,7 +119,14 @@ Microsoft.Extensions.Configuration, NewtonsoftJson, Stripe.net
 
 ![image](https://github.com/user-attachments/assets/f805e02b-ed20-4ab4-8dc4-016988e1e1e8)
 
+![image](https://github.com/user-attachments/assets/79bc5314-1eba-4f61-87ef-2bfbcb859835)  
 
+![image](https://github.com/user-attachments/assets/dc566107-7a19-465e-888f-b87038d93d39)
+
+![image](https://github.com/user-attachments/assets/fd000e52-b8f8-4778-a867-cc3fec4ebf63)
+
+
+![image](https://github.com/user-attachments/assets/072d09e5-4869-4d00-909b-c6b3a8326e39)
 
 
 
