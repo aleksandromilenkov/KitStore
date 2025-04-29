@@ -3,6 +3,7 @@
 **KitStore** is a fictional e-commerce application for browsing and purchasing football kits. Built as a learning project, it showcases a full-stack implementation with authentication, cart functionality, payment processing, and admin capabilities.  
 
 <img width="713" alt="Image" src="https://github.com/user-attachments/assets/44500e7b-f925-465a-9c7d-b18c51c41536" />  
+
 ![image](https://github.com/user-attachments/assets/b9162414-66dc-4901-9e70-0b517a017195)
 
 ---
