@@ -77,7 +77,7 @@ Microsoft.Extensions.Configuration, NewtonsoftJson, Stripe.net
   "redux-persist": "^6.0.0",
   "zod": "^3.24.2"
 }
-
+```
  
 ![image](https://github.com/user-attachments/assets/9f20e6a9-cb30-4e4e-afa1-310459ebc501)
 
@@ -94,6 +94,31 @@ Microsoft.Extensions.Configuration, NewtonsoftJson, Stripe.net
 ![image](https://github.com/user-attachments/assets/5263d9b8-bb85-456a-84eb-d52dc2fe046e)
 
 ![image](https://github.com/user-attachments/assets/b8ee1f4c-d6d1-46bc-b99b-59b1655d42a4)
+
+![image](https://github.com/user-attachments/assets/41347cd9-8282-4d40-a98c-c805310ce77c)  
+
+![image](https://github.com/user-attachments/assets/47520f0c-6237-4be2-a943-73efc50acc5e)
+
+![image](https://github.com/user-attachments/assets/4ca1db66-4bfb-4db0-a315-c8353d47ff34)  
+
+![image](https://github.com/user-attachments/assets/dbdb37bc-a0ba-41de-9635-2dadcfbb83bc)  
+
+![image](https://github.com/user-attachments/assets/a492b04f-eb98-418f-95f9-1dc68f18e608)  
+
+![image](https://github.com/user-attachments/assets/d6531b38-477e-495d-a61d-82353293ca29)  
+
+![image](https://github.com/user-attachments/assets/7b2bcf8b-596a-448c-9213-4d9faab6a544)
+
+![image](https://github.com/user-attachments/assets/54e3ff89-fa0b-4c7c-9f96-083f4527fd36)  
+
+![Image](https://github.com/user-attachments/assets/b748ad13-b0d8-4d59-86c4-a06be324bf45)  
+
+![Image](https://github.com/user-attachments/assets/dafb14ea-f393-4f58-bb9f-82c9f4a03547)  
+
+![image](https://github.com/user-attachments/assets/b92307e7-5de0-44dd-89b5-e466cdbd3fec)  
+
+![image](https://github.com/user-attachments/assets/f805e02b-ed20-4ab4-8dc4-016988e1e1e8)
+
 
 
 
