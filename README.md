@@ -18,6 +18,7 @@
 - 🧑‍💼 User Panel for updating Profile Picture, Username and Password  
 - ☁️ Image Upload (via Cloudinary)
 - ✨ Clean and responsive UI built with Material UI & CSS
+- ✨ Dark/Light Theme  
 
 ---
 
