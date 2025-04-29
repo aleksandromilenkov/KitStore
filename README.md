@@ -32,8 +32,9 @@
 AutoMapper, CloudinaryDotNet, Microsoft.AspNetCore.Authentication.JwtBearer, 
 Microsoft.AspNetCore.Identity.EntityFrameworkCore, Microsoft.EntityFrameworkCore (and tools),
 Microsoft.Extensions.Configuration, NewtonsoftJson, Stripe.net
+``` 
 
-### 🖥️ Frontend
+#### 🖥️ Frontend
 
 - **React.js**
 - **Redux Toolkit & RTK Query**
