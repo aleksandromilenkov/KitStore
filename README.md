@@ -157,7 +157,8 @@ Validation For Login:
 Validation For Register:  
 ![image](https://github.com/user-attachments/assets/072d09e5-4869-4d00-909b-c6b3a8326e39)
 
-
+Light Theme:  
+![image](https://github.com/user-attachments/assets/558bd554-f2ee-455a-8955-520f161ee349)
 
 
 
