@@ -63,7 +63,7 @@ const ProductForm = ({product, setEditMode, setProduct, refetch}:Props) => {
     return (
     <Box component={Paper} sx={{p:4, maxWidth: 'lg', mx:"auto"}}>
         <Typography variant="h4" sx={{mb:4}}>
-            Product Details 
+            Create Kit Form
         </Typography>
         <form onSubmit={handleSubmit(onSubmit)}>
             <Grid2 container spacing={3}>
