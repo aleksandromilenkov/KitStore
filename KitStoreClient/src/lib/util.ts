@@ -31,3 +31,14 @@ export function handleApiError<T extends FieldValues>(error: unknown, setError: 
       })
     }
   }
+
+  export function handleAuthApiError<T extends FieldValues>(error: unknown, setError: UseFormSetError<T>, fieldNames: Path<T>[]) {
+    const apiError = (error as {data: string[], status: string}) || {};
+    if(apiError.data && apiError.data.length > 0){
+      const errorArray = apiError.data;
+      errorArray.forEach(e => {
+        const matchField = fieldNames.find(fieldName => e.toLowerCase().includes(fieldName.toString().toLowerCase()));
+        if(matchField) setError(matchField, {message: e.trim()});
+      })
+    }
+  }

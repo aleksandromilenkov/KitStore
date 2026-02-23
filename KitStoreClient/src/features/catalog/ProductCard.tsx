@@ -4,31 +4,36 @@ import {
   Card,
   CardContent,
   CardMedia,
+  LinearProgress,
   Typography,
 } from "@mui/material";
 import { Kit } from "../../app/models/kit";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAddItemToCartMutation, useFetchCartQuery } from "../cart/cartApi";
 import { toast } from "react-toastify";
 import { CreateCartItem } from "../../app/models/createCartItem";
 import { useEffect } from "react";
-import { Cart } from "../../app/models/cart";
+import { useAppSelector } from "../../app/store/store";
 
 type Props = {
   product: Kit;
-  cart: Cart;
 }; 
 const ProductCard = ({ product }: Props) => {
   console.log(product)
    const [addToCart, {isLoading: isLoading} ] = useAddItemToCartMutation();
-   const {data:cart, refetch} = useFetchCartQuery();
+   const {data:cart, refetch, isLoading:isLoadingCart} = useFetchCartQuery();
+   const navigate = useNavigate()
+   const user = useAppSelector(state => state.user?.user);
    useEffect(() => {
     if (!cart) {
       refetch();
     }
   }, [cart, refetch]);
-   if(!cart) return <p>No Cart Found</p>
    const addToCartHandler = async ()=>{
+      if(!user || !cart){
+        navigate("/login", {state: {from: `/catalog/${product.id}`}}) // pass the current path in state so we can navigate back to it after login
+        return;
+      }
        const cartItemToCreate: CreateCartItem = {
          kitId: product.id,
          cartId: cart.id,
@@ -39,6 +44,7 @@ const ProductCard = ({ product }: Props) => {
        toast.success("Product added to cart.")
       }
     }
+    if(isLoadingCart) return <LinearProgress/>
   return (
     <Card
       elevation={3}

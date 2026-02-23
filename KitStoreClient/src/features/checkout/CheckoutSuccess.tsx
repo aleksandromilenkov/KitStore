@@ -2,10 +2,25 @@ import { Box, Button, Container, Divider, Paper, Typography } from "@mui/materia
 import { Link, useLocation } from "react-router-dom"
 import { Order } from "../../app/models/order";
 import { formatAddressString, formatPaymentString } from "../../lib/util";
+import { useEffect } from "react";
+import { useAppDispatch } from "../../app/store/store";
+import { cartApi, useFetchCartQuery } from "../cart/cartApi";
 
 const CheckoutSuccess = () => {
+  const dispatch = useAppDispatch();
   const {state} = useLocation();
   const order = state.data as Order;
+   // Force refetch cart on mount to ensure it's empty
+  useEffect(() => {
+    dispatch(cartApi.util.invalidateTags(["Cart"]));
+  }, [dispatch]);
+  
+  // Also trigger a fetch to update the UI
+  const { refetch } = useFetchCartQuery();
+  
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
   if(!order) return <Typography>Problem accessing the order</Typography>
   return (
     <Container maxWidth="md">

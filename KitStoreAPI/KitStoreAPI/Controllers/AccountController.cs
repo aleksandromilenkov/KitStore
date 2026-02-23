@@ -4,7 +4,6 @@ using KitStoreAPI.Entities;
 using KitStoreAPI.Interfaces;
 using KitStoreAPI.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -33,12 +32,17 @@ namespace KitStoreAPI.Controllers
                 Email = registerDTO.Email,
             };
             var createdUser = await _userManager.CreateAsync(appUser, registerDTO.Password);
+            if (createdUser.Succeeded == false)
+            {
+                return BadRequest(createdUser.Errors.Select(e => e.Description));
+            }
             var roleResult = await _userManager.AddToRoleAsync(appUser, "Member");
             return roleResult.Succeeded ? Ok() : BadRequest();
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginUserDTO loginDTO)  {
+        public async Task<IActionResult> Login([FromBody] LoginUserDTO loginDTO)
+        {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);

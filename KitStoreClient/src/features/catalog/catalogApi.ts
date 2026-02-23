@@ -7,6 +7,7 @@ import { Pagination } from "../../app/models/pagination";
 
 export const catalogApi = createApi({
     reducerPath: 'catalogApi',
+    tagTypes: ["Products"],
     baseQuery: baseQueryWithErrorHandling,
     endpoints: (builder)=>({
         fetchProducts: builder.query<{items:Kit[], pagination: Pagination}, ProductParams>({
@@ -20,6 +21,13 @@ export const catalogApi = createApi({
                 if (leagues && leagues.length > 0) params.append("leagues", leagues.join(","));
                 return { url: `kit?${params.toString()}` };
             },
+            providesTags:(result) =>
+                result
+                  ? [
+                      ...result.items.map(({ id }) => ({ type: 'Products' as const, id })),
+                      { type: 'Products', id: 'LIST' },
+                    ]
+                  : [{ type: 'Products', id: 'LIST' }],
             transformResponse: (response: {items: Kit[], pagination: Pagination}, meta) => {
                 const paginationHeader = meta?.response?.headers.get('Pagination');
                 const pagination = paginationHeader ? JSON.parse(paginationHeader) : response.pagination;
@@ -28,10 +36,10 @@ export const catalogApi = createApi({
                     pagination
                 };
             }
-            
         }),
         fetchProductsDetails: builder.query<Kit, number>({
-            query:(kitId)=> `kit/${kitId}`
+            query:(kitId)=> `kit/${kitId}`,
+            providesTags: (_result, _error, id)  => [{ type: 'Products', id }]
         }),
         fetchFilters: builder.query<{brands: string[], types:string[]}, void>({
             query:()=> "products/filters"

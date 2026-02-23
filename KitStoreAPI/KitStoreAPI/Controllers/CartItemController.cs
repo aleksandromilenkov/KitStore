@@ -26,14 +26,25 @@ namespace KitStoreAPI.Controllers
         public async Task<IActionResult> AddItemToCart([FromBody] CreateCartItemDTO createCartItemDTO)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            if(createCartItemDTO.Quantity <= 0) return BadRequest("Cannot have null or negative quantity");
+            if (createCartItemDTO.Quantity <= 0) return BadRequest("Cannot have null or negative quantity");
             if (await _kitRepository.GetAsyncAsNoTracking(createCartItemDTO.KitId) == null) return BadRequest("No Kit provided");
             var cartItem = _mapper.Map<CartItem>(createCartItemDTO);
+            var kit = await _kitRepository.GetAsync(cartItem.KitId);
+            if (kit is not null && kit.QuantityInStock < cartItem.Quantity)
+            {
+                return BadRequest("Not enough stock for this item");
+            }
+            if (kit is not null)
+            {
+                kit.QuantityInStock -= cartItem.Quantity;
+                await _kitRepository.UpdateKit(kit);
+            }
             if (!await _cartItemRepository.CreateCartItem(cartItem))
             {
                 return BadRequest("Cannot add this cart item");
             }
             var cartItemDTO = _mapper.Map<CartItemDTO>(cartItem);
+
             return CreatedAtAction(nameof(GetCartItem), new { id = cartItem.Id }, cartItemDTO);
         }
 
@@ -50,7 +61,16 @@ namespace KitStoreAPI.Controllers
 
             if (!await _cartItemRepository.UpdateCartItem(itemToUpdate))
                 return BadRequest("Cannot update this item");
-
+            var kit = await _kitRepository.GetAsync(itemToUpdate.KitId);
+            if (kit is not null && kit.QuantityInStock < itemToUpdate.Quantity)
+            {
+                return BadRequest("Not enough stock for this item");
+            }
+            if (kit is not null)
+            {
+                kit.QuantityInStock -= itemToUpdate.Quantity;
+                await _kitRepository.UpdateKit(kit);
+            }
             return NoContent();
         }
 
@@ -63,6 +83,12 @@ namespace KitStoreAPI.Controllers
             var itemToRemove = await _cartItemRepository.GetAsync(itemId);
             if (itemToRemove == null) return BadRequest("Item is already removed");
             if (!await _cartItemRepository.DeleteCartItem(itemToRemove, quantity)) return BadRequest("Cannot remove this item");
+            var kit = await _kitRepository.GetAsync(itemToRemove.KitId);
+            if (kit is not null)
+            {
+                kit.QuantityInStock += quantity;
+                await _kitRepository.UpdateKit(kit);
+            }
             return NoContent();
         }
     }

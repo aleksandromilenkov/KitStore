@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LockOutlined } from "@mui/icons-material";
 import { Container, Paper, Box, Typography, TextField, Button } from "@mui/material";
 import { Link } from "react-router-dom";
-import { handleApiError } from "../../lib/util";
+import { handleAuthApiError } from "../../lib/util";
 
 const RegisterForm = () => {
     const [registerUser, {isLoading}] = useRegisterMutation();
@@ -17,7 +17,7 @@ const RegisterForm = () => {
         try{
             await registerUser(data).unwrap(); // RTK Query returns object with {data,error} but when we use unwrap we are converting it to Promise so we can use try-catch
         }catch(error){
-            handleApiError<RegisterSchema>(error, setError, ['email', 'password'])
+            handleAuthApiError<RegisterSchema>(error, setError, ['email', 'password'])
         }
     }
   return (

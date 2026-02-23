@@ -1,18 +1,16 @@
 import { Grid2 } from "@mui/material"
 import { Kit } from "../../app/models/kit"
 import ProductCard from "./ProductCard"
-import { Cart } from "../../app/models/cart"
 
 type Props = {
-    products: Kit[],
-    cart: Cart
+    products: Kit[]
 }
-const ProductList = ({products, cart}: Props) => {
+const ProductList = ({products}: Props) => {
   return (
         <Grid2 container spacing={3}>
         {products?.map(item => (
           <Grid2 size={3} display="flex" key={item.id}>
-           <ProductCard key={item.id} product={item} cart={cart}/>
+           <ProductCard key={item.id} product={item}/>
           </Grid2>
           ))}
       </Grid2>

@@ -1,11 +1,9 @@
 ﻿using System.Security.Claims;
 using API.Services;
-using KitStoreAPI.Data;
 using KitStoreAPI.Entities;
 using KitStoreAPI.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using RestoreAPI.Services;
 
 namespace KitStoreAPI.Controllers
@@ -13,7 +11,7 @@ namespace KitStoreAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class CartController(ICartRepository _cartRepository, DiscountService discountService, PaymentsService paymentsService) : ControllerBase
+    public class CartController(ICartRepository _cartRepository, IKitRepository _kitRepository, DiscountService discountService, PaymentsService paymentsService) : ControllerBase
     {
         [HttpGet]
         public async Task<ActionResult<Cart>> GetCart()
@@ -24,9 +22,9 @@ namespace KitStoreAPI.Controllers
             if (string.IsNullOrEmpty(userId))
                 return BadRequest("User ID not found in token.");
             var cart = await _cartRepository.GetAsync(userId);
-            if(cart == null)
+            if (cart == null)
             {
-                if(! await _cartRepository.CreateCart(userId)) return BadRequest("Cannot create cart");
+                if (!await _cartRepository.CreateCart(userId)) return BadRequest("Cannot create cart");
                 cart = await _cartRepository.GetAsync(userId);
             }
             return Ok(cart);
@@ -59,13 +57,23 @@ namespace KitStoreAPI.Controllers
             if (string.IsNullOrEmpty(userId))
                 return BadRequest("User ID not found in token.");
 
-            // Pass userId to repository
+            var cart = await _cartRepository.GetAsync(userId);
+            if (cart == null) return BadRequest("Cart not found");
+
+            foreach (var item in cart.Items)
+            {
+                var kit = await _kitRepository.GetAsync(item.KitId);
+                if (kit != null)
+                {
+                    kit.QuantityInStock += item.Quantity;
+                    await _kitRepository.UpdateKit(kit);
+                }
+            }
             if (!await _cartRepository.DeleteCart(userId))
             {
                 return BadRequest("Cannot remove Cart, maybe it's already removed");
             }
-
-            return Ok("Cart removed successfully!");
+            return Ok(new { message = "Cart removed successfully!" });
         }
 
         [HttpPost("{code}")]

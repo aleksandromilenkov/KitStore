@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Button,
   Divider,
@@ -10,11 +10,13 @@ import {
   TableRow,
   TextField,
   Typography,
+  LinearProgress
 } from "@mui/material";
 import { useFetchProductsDetailsQuery } from "./catalogApi";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useAddItemToCartMutation, useFetchCartQuery, useRemoveItemFromCartMutation } from "../cart/cartApi";
 import { toast } from "react-toastify";
+import { useAppSelector } from "../../app/store/store";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -25,14 +27,20 @@ const ProductDetails = () => {
   const [removeFromCart, { isLoading: removingItemToCart }] = useRemoveItemFromCartMutation();
   const { data: cartItems } = useFetchCartQuery();
   const item = product && cartItems?.items?.find((i) => i.kitId === product.id);
+  const navigate = useNavigate()
+  const user = useAppSelector(state => state.user?.user);
 
   useEffect(() => {
     if (item) setQuantity(item.quantity);
   }, [item]);
 
-  if (!product || isLoading || addingItemToCart || removingItemToCart || !cart) return <div>Loading...</div>;
+  if (!product || isLoading || addingItemToCart || removingItemToCart) return <LinearProgress />;
   
   const handleUpdateBasket = async ()=>{
+     if(!user || !cart){
+        navigate("/login", {state: {from: `/catalog/${product.id}`}}) // pass the current path in state so we can navigate back to it after login
+        return;
+      }
     const updatedQuantity = item ? Math.abs(quantity - item.quantity) : quantity;
     if(!item || quantity > item.quantity){
       const result = await addToCart({kitId:product.id, quantity: updatedQuantity, cartId:cart?.id});

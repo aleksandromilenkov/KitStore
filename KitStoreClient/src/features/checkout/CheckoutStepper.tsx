@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import {LoadingButton} from "@mui/lab"
 import { useCreateOrderMutation } from "../orders/orderApi";
+import { useClearCartMutation } from "../cart/cartApi";
 
 const steps = ["Address", "Payment", "Review"];
 
@@ -25,8 +26,9 @@ const CheckoutStepper = () => {
   const [paymentComplete, setPaymentComplete] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [confirmationToken, setConfirmationToken] = useState<ConfirmationToken | null>(null);
-  const {total, cart, clearCart} = useCart();
-
+  const {total, cart} = useCart();
+ // Use the mutation directly instead of the custom hook
+  const [clearCartMutation] = useClearCartMutation();
   let name, restAddress;
   if(data){
     ({name, ...restAddress} = data);
@@ -53,8 +55,8 @@ const CheckoutStepper = () => {
                 confirmation_token: confirmationToken.id
             }});
         if (paymentResult?.paymentIntent?.status === 'succeeded'){
+            await clearCartMutation().unwrap();
             navigate("/checkout/success", {state: orderResult});
-            clearCart();
         } else if (paymentResult?.error) {
             throw new Error(paymentResult.error.message);
         } else {

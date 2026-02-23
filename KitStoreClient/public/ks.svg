@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="bagGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4CAF50;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2E7D32;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Shopping Bag -->
+  <path d="M7 10 L7 26 Q7 28 9 28 L23 28 Q25 28 25 26 L25 10 Z" fill="url(#bagGradient)"/>
+  
+  <!-- Bag Handle -->
+  <path d="M12 10 Q12 6 16 6 Q20 6 20 10" stroke="#2E7D32" stroke-width="2" fill="none"/>
+  
+  <!-- KS Text -->
+  <text x="16" y="21" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">KS</text>
+</svg>
